@@ -4,8 +4,9 @@ namespace Zappr.GraphQL.Core.Domain
 {
     public class Series : Watchable
     {
+
         // Nav Props
-        public ICollection<Season> Seasons { get; } = new List<Season>();
+        public ICollection<Episode> Episodes { get; } = new List<Episode>();
         public ICollection<Actor> Actors { get; } = new List<Actor>();
 
         // Constructor

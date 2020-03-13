@@ -33,7 +33,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Zappr.GraphQL.Core.Domain.Episode">
-    <Position X="16.25" Y="11.5" Width="1.5" />
+    <Position X="17.5" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Domain\Episode.cs</FileName>
@@ -64,33 +64,15 @@
       <FileName>Domain\Actor.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Zappr.GraphQL.Core.Domain.Season">
-    <Position X="18.5" Y="11.5" Width="1.5" />
-    <InheritanceLine Type="Zappr.GraphQL.Core.Domain.Watchable" FixedToPoint="true">
-      <Path>
-        <Point X="19.75" Y="9.94" />
-        <Point X="19.75" Y="11.125" />
-        <Point X="19" Y="11.125" />
-        <Point X="19" Y="11.5" />
-      </Path>
-    </InheritanceLine>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Domain\Season.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Episodes" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="Zappr.GraphQL.Core.Domain.Series">
-    <Position X="20.75" Y="11.5" Width="1.5" />
+    <Position X="20.5" Y="11.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Domain\Series.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="Seasons" />
       <Property Name="Actors" />
+      <Property Name="Episodes" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Zappr.GraphQL.Core.Domain.User">
@@ -102,8 +84,8 @@
         <Point X="18.708" Y="7.43" Type="JumpEnd" />
         <Point X="20.792" Y="7.43" Type="JumpStart" />
         <Point X="20.958" Y="7.43" Type="JumpEnd" />
-        <Point X="22.062" Y="7.43" />
-        <Point X="22.062" Y="11.5" />
+        <Point X="21.812" Y="7.43" />
+        <Point X="21.812" Y="11.5" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-2.022" Y="0.982" />
@@ -116,8 +98,8 @@
         <Point X="18.708" Y="7.59" Type="JumpEnd" />
         <Point X="20.792" Y="7.59" Type="JumpStart" />
         <Point X="20.958" Y="7.59" Type="JumpEnd" />
-        <Point X="21.688" Y="7.59" />
-        <Point X="21.688" Y="11.5" />
+        <Point X="21.438" Y="7.59" />
+        <Point X="21.438" Y="11.5" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.292" Y="0.604" />

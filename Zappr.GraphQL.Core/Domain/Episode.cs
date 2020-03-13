@@ -2,6 +2,15 @@
 {
     public class Episode : Watchable
     {
-        public Episode(int id) : base(id) => Id = id;
+        public int SeasonNumber { get; set; }
+
+        public Episode(int id, int seasonNumber) : base(id)
+        {
+            SeasonNumber = seasonNumber;
+            Id = id;
+        }
+
+        //when no season specified, just call it season 1
+        public Episode(int id) : this(id, 1) { }
     }
 }
