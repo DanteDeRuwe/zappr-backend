@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Zappr.GraphQL.Core.Domain.Comment">
+    <Position X="16.5" Y="4.75" Width="2.5" />
+    <AssociationLine Name="Replies" Type="Zappr.GraphQL.Core.Domain.Comment" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.312" Y="4.75" />
+        <Point X="18.312" Y="4.25" />
+        <Point X="18.875" Y="4.25" />
+        <Point X="18.875" Y="4.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.812" Y="0.311" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Author" Type="Zappr.GraphQL.Core.Domain.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.812" Y="4.75" />
+        <Point X="16.812" Y="4.575" />
+        <Point X="12.5" Y="4.575" />
+        <Point X="12.5" Y="7.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACAAIAAA=</HashCode>
+      <FileName>Domain\Comment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Author" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="Replies" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Episode">
+    <Position X="16.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Episode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Rating">
+    <Position X="20.5" Y="4.75" Width="2.75" />
+    <AssociationLine Name="Author" Type="Zappr.GraphQL.Core.Domain.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="21.5" Y="4.75" />
+        <Point X="21.5" Y="3.924" />
+        <Point X="11.812" Y="3.924" />
+        <Point X="11.812" Y="7.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Rating.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Author" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Actor">
+    <Position X="23.75" Y="11.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Actor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Season">
+    <Position X="18.5" Y="11.5" Width="1.5" />
+    <InheritanceLine Type="Zappr.GraphQL.Core.Domain.Watchable" FixedToPoint="true">
+      <Path>
+        <Point X="19.75" Y="9.94" />
+        <Point X="19.75" Y="11.125" />
+        <Point X="19" Y="11.125" />
+        <Point X="19" Y="11.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Season.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Episodes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Series">
+    <Position X="20.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Series.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Seasons" />
+      <Property Name="Actors" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.User">
+    <Position X="11" Y="7.25" Width="3.5" />
+    <AssociationLine Name="FavoriteSeries" Type="Zappr.GraphQL.Core.Domain.Series" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.5" Y="7.43" />
+        <Point X="18.542" Y="7.43" Type="JumpStart" />
+        <Point X="18.708" Y="7.43" Type="JumpEnd" />
+        <Point X="20.792" Y="7.43" Type="JumpStart" />
+        <Point X="20.958" Y="7.43" Type="JumpEnd" />
+        <Point X="22.062" Y="7.43" />
+        <Point X="22.062" Y="11.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.022" Y="0.982" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="WatchList" Type="Zappr.GraphQL.Core.Domain.Series" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.5" Y="7.59" />
+        <Point X="18.542" Y="7.59" Type="JumpStart" />
+        <Point X="18.708" Y="7.59" Type="JumpEnd" />
+        <Point X="20.792" Y="7.59" Type="JumpStart" />
+        <Point X="20.958" Y="7.59" Type="JumpEnd" />
+        <Point X="21.688" Y="7.59" />
+        <Point X="21.688" Y="11.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.292" Y="0.604" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAGAEAAAAAAAIACAAAABgAAAAABAAAAACAAAAAgAAA=</HashCode>
+      <FileName>Domain\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="FavoriteSeries" />
+      <Property Name="RatedWatchables" />
+      <Property Name="WatchList" />
+      <Property Name="WatchedEpisodes" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Zappr.GraphQL.Core.Domain.Watchable">
+    <Position X="18.25" Y="8" Width="3" />
+    <AssociationLine Name="Ratings" Type="Zappr.GraphQL.Core.Domain.Rating">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.359" Y="-1.365" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Comments" Type="Zappr.GraphQL.Core.Domain.Comment">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAAAAAAAAgAACAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Domain\Watchable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Ratings" />
+      <Property Name="Comments" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
