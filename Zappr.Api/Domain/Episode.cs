@@ -1,22 +1,30 @@
 ﻿using System.Collections.Generic;
 
-namespace Zappr.GraphQL.Core.Domain
+namespace Zappr.Api.Domain
 {
-    public abstract class Watchable
+    public class Episode
     {
+
         // Properties
         public int Id { get; set; }
+        public int SeasonNumber { get; set; }
 
         // Nav Props
         public ICollection<Rating> Ratings { get; } = new List<Rating>();
         public ICollection<Comment> Comments { get; } = new List<Comment>();
 
-        // Constructor
-        protected Watchable(int id) => Id = id;
-
         // Methods
         public void AddRating(Rating rating) => Ratings.Add(rating);
         public void AddComment(Comment comment) => Comments.Add(comment);
 
+        public Episode() { }
+
+        public Episode(int id, int seasonNumber)
+        {
+            SeasonNumber = seasonNumber;
+            Id = id;
+        }
+
+        public Episode(int id) : this(id, 1) { }
     }
 }
