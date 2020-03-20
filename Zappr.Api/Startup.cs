@@ -9,13 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Zappr.Api.Data.Repositories;
+using Zappr.Api.Domain;
 using Zappr.Api.GraphQL;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Services;
 
 namespace Zappr.Api
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
@@ -33,12 +36,26 @@ namespace Zappr.Api
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
             services.AddHttpContextAccessor();
+
             //External API
             services.AddSingleton<TvdbService>();
+
+            //Repos
             services.AddTransient<IRepository<User>, UserRepository>();
+
+            //Schema
             services.AddSingleton<ISchema, ZapprSchema>();
-            services.AddSingleton<UserQuery>();
+
+            // Types
+            services.AddSingleton<SeriesType>();
             services.AddSingleton<UserType>();
+
+            // Queries
+            services.AddSingleton<UserQuery>();
+            services.AddSingleton<SeriesQuery>();
+            services.AddSingleton<ZapprQuery>();
+
+
             services.AddGraphQL();
         }
 
