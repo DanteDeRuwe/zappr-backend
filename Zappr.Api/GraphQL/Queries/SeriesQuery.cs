@@ -15,13 +15,18 @@ namespace Zappr.Api.GraphQL
             Name = "Series";
 
             // get by id
-            QueryArguments args = new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" });
             Field<SeriesType>(
                 "get",
-                arguments: args,
-                resolve: context => _tvdb.GetSeriesByIdAsync(context.GetArgument<int>("id"))
+                arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
+        resolve: context => _tvdb.GetSeriesByIdAsync(context.GetArgument<int>("id"))
             );
 
+            //Search by name
+            Field<ListGraphType<SeriesType>>(
+                "search",
+                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
+                resolve: context => _tvdb.SearchSeriesByNameAsync(context.GetArgument<string>("name"))
+            );
         }
     }
 }
