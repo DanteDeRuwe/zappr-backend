@@ -7,11 +7,11 @@ namespace Zappr.Api.Domain
 
         // Properties
         public int Id { get; set; }
-        public int SeasonNumber { get; set; }
 
         // Nav Props
-        public ICollection<Rating> Ratings { get; } = new List<Rating>();
-        public ICollection<Comment> Comments { get; } = new List<Comment>();
+        public List<Rating> Ratings { get; } = new List<Rating>();
+        public List<Comment> Comments { get; } = new List<Comment>();
+
 
         // Methods
         public void AddRating(Rating rating) => Ratings.Add(rating);
@@ -19,12 +19,6 @@ namespace Zappr.Api.Domain
 
         public Episode() { }
 
-        public Episode(int id, int seasonNumber)
-        {
-            SeasonNumber = seasonNumber;
-            Id = id;
-        }
-
-        public Episode(int id) : this(id, 1) { }
+        public Episode(int id) => Id = id;
     }
 }

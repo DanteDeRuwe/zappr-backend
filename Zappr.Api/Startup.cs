@@ -32,7 +32,8 @@ namespace Zappr.Api
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<IRepository<User>, UserRepository>();
             services.AddSingleton<ISchema, ZapprSchema>();
             services.AddSingleton<UserQuery>();
             services.AddSingleton<UserType>();

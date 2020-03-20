@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Zappr.Api.Domain
 {
@@ -11,11 +11,11 @@ namespace Zappr.Api.Domain
 
 
         // Nav Props
-        public ICollection<UserSeries> WatchList { get; } = new List<UserSeries>();
-        public ICollection<UserSeries> FavoriteSeries { get; } = new List<UserSeries>();
-        public ICollection<UserEpisode> WatchedEpisodes { get; } = new List<UserEpisode>();
-        public ICollection<UserSeries> RatedSeries { get; } = new List<UserSeries>();
-        public ICollection<UserEpisode> RatedEpisodes { get; } = new List<UserEpisode>();
+        public List<UserSeries> WatchList { get; } = new List<UserSeries>();
+        public List<UserSeries> FavoriteSeries { get; } = new List<UserSeries>();
+        public List<UserEpisode> WatchedEpisodes { get; } = new List<UserEpisode>();
+        public List<UserSeries> RatedSeries { get; } = new List<UserSeries>();
+        public List<UserEpisode> RatedEpisodes { get; } = new List<UserEpisode>();
 
         // Constructor
         public User() { }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Zappr.Api.Domain
 {
@@ -10,7 +10,7 @@ namespace Zappr.Api.Domain
 
         // Nav Props
         public User Author { get; private set; }
-        public ICollection<Comment> Replies = new List<Comment>();
+        public List<Comment> Replies = new List<Comment>();
 
         // Constructors
         public Comment() { }
