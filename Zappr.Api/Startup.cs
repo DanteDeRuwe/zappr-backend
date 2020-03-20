@@ -33,6 +33,8 @@ namespace Zappr.Api
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
             services.AddHttpContextAccessor();
+            //External API
+            services.AddSingleton<TvdbService>();
             services.AddTransient<IRepository<User>, UserRepository>();
             services.AddSingleton<ISchema, ZapprSchema>();
             services.AddSingleton<UserQuery>();
