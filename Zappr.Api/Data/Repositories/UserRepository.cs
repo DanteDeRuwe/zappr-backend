@@ -1,21 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using Zappr.Api.Domain;
 
 namespace Zappr.Api.Data.Repositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository
     {
+        private readonly AppDbContext _context;
+        private readonly DbSet<User> _users;
 
-
-        private readonly List<User> _tempUsers = new List<User>
+        public UserRepository(AppDbContext context)
         {
-            new User(0, "John"), new User(1, "Jane"), new User(2, "Joan"), new User(3, "June"), new User(4, "Jean")
-        };
+            _context = context;
+            _users = context.Users;
+        }
 
-        public UserRepository() { }
+        public List<User> GetAll() => _users.ToList(); //just user data
 
-        public List<User> GetAll() => _tempUsers;
-        public User GetById(int id) => _tempUsers.FirstOrDefault(u => u.Id == id);
+        // When getting by id, include all series and episode data
+        public User GetById(int id) => _users.Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
+                                            .Include(u => u.WatchList).ThenInclude(us => us.Series)
+                                            .Include(u => u.RatedSeries).ThenInclude(us => us.Series)
+                                            .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode)
+                                            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode)
+                                            .SingleOrDefault(u => u.Id == id);
+
+        public User Add(User user)
+        {
+            _users.Add(user);
+            return user;
+        }
+
+        public User Delete(User item) => throw new System.NotImplementedException(); //TODO
+        public void SaveChanges() => _context.SaveChanges();
     }
 }

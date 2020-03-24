@@ -41,7 +41,7 @@ namespace Zappr.Api
             services.AddSingleton<TvdbService>();
 
             //Repos
-            services.AddTransient<IRepository<User>, UserRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             //Schema
             services.AddSingleton<ISchema, ZapprSchema>();
