@@ -8,7 +8,7 @@ namespace Zappr.Api.GraphQL
     public class UserQuery : ObjectGraphType
     {
         private readonly UserRepository _userRepository;
-        public UserQuery(IRepository<User> userRepository)
+        public UserQuery(IUserRepository userRepository)
         {
             Name = "Users";
 
