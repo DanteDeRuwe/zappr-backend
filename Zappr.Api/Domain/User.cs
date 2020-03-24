@@ -5,16 +5,16 @@ namespace Zappr.Api.Domain
     public class User
     {
         // Properties
-        public int Id { get; private set; }
-        public string Email { get; private set; }
+        public int Id { get; set; }
+        public string Email { get; set; }
         public string FullName { get; set; }
 
 
         // Nav Props
         public List<UserSeries> WatchList { get; } = new List<UserSeries>();
         public List<UserSeries> FavoriteSeries { get; } = new List<UserSeries>();
-        public List<UserEpisode> WatchedEpisodes { get; } = new List<UserEpisode>();
         public List<UserSeries> RatedSeries { get; } = new List<UserSeries>();
+        public List<UserEpisode> WatchedEpisodes { get; } = new List<UserEpisode>();
         public List<UserEpisode> RatedEpisodes { get; } = new List<UserEpisode>();
 
         // Constructor

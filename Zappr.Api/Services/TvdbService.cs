@@ -61,8 +61,6 @@ namespace Zappr.Api.Services
             uriBuilder.Query = query.ToString();
             string url = uriBuilder.ToString();
 
-            Console.WriteLine("searching series by calling " + url);
-
             var responseTask = _client.GetAsync(url);
             responseTask.Wait();
 
@@ -76,8 +74,6 @@ namespace Zappr.Api.Services
                 //TODO error handling!
                 JArray seriesArr = resObj.data;
                 var list = seriesArr.ToObject<List<dynamic>>();
-
-                Console.WriteLine(list.First());
 
                 return list.Select(s => ConstructSeries(s, source: "search") as Series).ToList();
             }
