@@ -5,12 +5,15 @@ using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Zappr.Api.Data;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL;
+using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
 
@@ -26,15 +29,17 @@ namespace Zappr.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
-
-            /*services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AppDbContext"))
-            );*/
+            services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
+            // DB
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AppDbContext"))
+            );
+
+            // HTTPContext
             services.AddHttpContextAccessor();
 
             //External API
@@ -43,29 +48,39 @@ namespace Zappr.Api
             //Repos
             services.AddTransient<IUserRepository, UserRepository>();
 
+
             //Schema
-            services.AddSingleton<ISchema, ZapprSchema>();
+            services.AddTransient<ISchema, ZapprSchema>();
 
             // Types
-            services.AddSingleton<SeriesType>();
-            services.AddSingleton<UserType>();
+            services.AddScoped<SeriesType>();
+            services.AddScoped<UserType>();
+            services.AddScoped<UserInputType>();
 
             // Queries
-            services.AddSingleton<UserQuery>();
-            services.AddSingleton<SeriesQuery>();
-            services.AddSingleton<ZapprQuery>();
+            services.AddScoped<UserQuery>();
+            services.AddScoped<SeriesQuery>();
+            services.AddScoped<ZapprQuery>();
 
+            // Mutations
+            services.AddScoped<UserMutation>();
+            services.AddScoped<ZapprMutation>();
 
+            // GraphQL
             services.AddGraphQL();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
+            context.Database.Migrate();
 
             app.UseGraphQL<ISchema>("/graphql");
 

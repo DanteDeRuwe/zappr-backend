@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
+using System.Text.Json;
 using Zappr.Api.Domain;
 
 namespace Zappr.Api.Data.Configurations
@@ -11,9 +13,19 @@ namespace Zappr.Api.Data.Configurations
             builder.ToTable("Series");
             builder.HasKey(s => s.Id);
 
-            builder.HasMany(s => s.Episodes).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(s => s.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(s => s.Characters).WithOne().OnDelete(DeleteBehavior.Cascade);
+            builder.Property(s => s.Genres).HasConversion(
+                g => JsonSerializer.Serialize(g, default),
+                g => JsonSerializer.Deserialize<List<string>>(g, default)
+            );
+
+            builder.Property(s => s.Aliases).HasConversion(
+                g => JsonSerializer.Serialize(g, default),
+                g => JsonSerializer.Deserialize<List<string>>(g, default)
+            );
+
+            builder.HasMany(s => s.Episodes).WithOne();
+            //builder.HasMany(s => s.Comments).WithOne();
+            //builder.HasMany(s => s.Characters).WithOne();
         }
     }
 }

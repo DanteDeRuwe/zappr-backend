@@ -11,11 +11,14 @@ namespace Zappr.Api.Data.Configurations
             builder.ToTable("User");
             builder.HasKey(u => u.Id);
 
-            builder.HasMany(u => u.FavoriteSeries).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(u => u.WatchList).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(u => u.RatedSeries).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(u => u.RatedEpisodes).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(u => u.WatchedEpisodes).WithOne().OnDelete(DeleteBehavior.Cascade);
+            //Series
+            builder.HasMany(u => u.FavoriteSeries).WithOne(); ;
+            builder.HasMany(u => u.WatchList).WithOne();
+            builder.HasMany(u => u.RatedSeries).WithOne();
+
+            //Episodes
+            builder.HasMany(u => u.RatedEpisodes).WithOne();
+            builder.HasMany(u => u.WatchedEpisodes).WithOne();
         }
     }
 }
