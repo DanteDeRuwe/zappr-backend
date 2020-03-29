@@ -29,6 +29,17 @@ namespace Zappr.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("DefaultPolicy", builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .WithMethods("GET", "POST")
+                        .WithOrigins("http://localhost:4200");
+                });
+            });
+
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
@@ -81,6 +92,8 @@ namespace Zappr.Api
             //context.Database.EnsureDeleted();
             //context.Database.EnsureCreated();
             context.Database.Migrate();
+
+            app.UseCors("DefaultPolicy");
 
             app.UseGraphQL<ISchema>("/graphql");
 
