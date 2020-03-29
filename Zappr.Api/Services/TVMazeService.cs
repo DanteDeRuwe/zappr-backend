@@ -119,14 +119,14 @@ namespace Zappr.Api.Services
         }
 
 
-        public async Task<List<Series>> GetScheduleMultipleDaysFromTodayAsync(string country, int days = 7)
+        public async Task<List<Series>> GetScheduleMultipleDaysFromTodayAsync(string country, int startFromToday = 0, int days = 7)
         {
 
             List<Series> schedule = new List<Series>();
-            for (int i = 0; i < days; i++)
+            for (int i = startFromToday; i < startFromToday + days; i++)
             {
                 var thisday = await GetScheduleAsync(country, DateTime.Now.AddDays(i).ToString("yyyy-MM-dd"));
-                schedule = schedule.Concat(thisday).ToList();
+                schedule = schedule.Concat(thisday).ToHashSet().ToList(); //toHashSet to eliminate duplicates
             }
 
             return schedule;

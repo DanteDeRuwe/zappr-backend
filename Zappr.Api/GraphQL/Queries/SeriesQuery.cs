@@ -44,12 +44,20 @@ namespace Zappr.Api.GraphQL
 
             //Scheduled shows per country for the whole week
             Field<ListGraphType<SeriesType>>(
-                "thisweek",
-                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "country" }),
-                resolve: context => _tvmaze.GetScheduleMultipleDaysFromTodayAsync(context.GetArgument<string>("country"))
+                "schedule",
+                arguments: new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "country" },
+                    new QueryArgument<IntGraphType>
+                    { Name = "start", Description = "the number of days from today you want to take as the start" },
+                    new QueryArgument<IntGraphType>
+                    { Name = "numberofdays", Description = "the number of days you want to include in the schedule" }
+                ),
+                resolve: context => _tvmaze.GetScheduleMultipleDaysFromTodayAsync(
+                    context.GetArgument<string>("country"),
+                    context.GetArgument<int>("start"),
+                    context.GetArgument<int>("numberofdays")
+                )
             );
-
-
         }
     }
 }

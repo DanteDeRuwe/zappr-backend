@@ -32,5 +32,11 @@ namespace Zappr.Api.Domain
         public void AddRating(Rating rating) => Ratings.Add(rating);
         public void AddComment(Comment comment) => Comments.Add(comment);
 
+
+        public override bool Equals(object obj) =>
+            //Check for null and compare run-time types.
+            (obj != null) && this.GetType() == obj.GetType() && Id == ((Series)obj).Id;
+
+        public override int GetHashCode() => Id;
     }
 }
