@@ -18,11 +18,6 @@ namespace Zappr.Api.Data.Configurations
                 g => JsonSerializer.Deserialize<List<string>>(g, default)
             );
 
-            builder.Property(s => s.Aliases).HasConversion(
-                g => JsonSerializer.Serialize(g, default),
-                g => JsonSerializer.Deserialize<List<string>>(g, default)
-            );
-
             builder.HasMany(s => s.Episodes).WithOne();
             //builder.HasMany(s => s.Comments).WithOne();
             //builder.HasMany(s => s.Characters).WithOne();

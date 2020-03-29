@@ -40,8 +40,10 @@ namespace Zappr.Api
                 });
             });
 
+            //DI
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
+            //Making things work ¯\_( ")_/¯
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
@@ -53,12 +55,11 @@ namespace Zappr.Api
             // HTTPContext
             services.AddHttpContextAccessor();
 
-            //External API
-            services.AddSingleton<TvdbService>();
+            //External APIs
+            services.AddSingleton<TVMazeService>();
 
             //Repos
             services.AddTransient<IUserRepository, UserRepository>();
-
 
             //Schema
             services.AddTransient<ISchema, ZapprSchema>();
@@ -79,6 +80,7 @@ namespace Zappr.Api
 
             // GraphQL
             services.AddGraphQL();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +91,7 @@ namespace Zappr.Api
                 app.UseDeveloperExceptionPage();
 
             }
+
             //context.Database.EnsureDeleted();
             //context.Database.EnsureCreated();
             context.Database.Migrate();

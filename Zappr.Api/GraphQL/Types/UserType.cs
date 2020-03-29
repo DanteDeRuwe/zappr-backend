@@ -1,18 +1,14 @@
 ﻿using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.Domain;
-using Zappr.Api.Services;
 
 namespace Zappr.Api.GraphQL.Types
 {
     public class UserType : ObjectGraphType<User>
     {
-        private readonly TvdbService _tvdb;
 
-        public UserType(TvdbService tvdbService)
+        public UserType()
         {
-
-            _tvdb = tvdbService;
 
             Field(u => u.Id);
             Field(u => u.FullName);

@@ -1,20 +1,17 @@
 ﻿using GraphQL.Types;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
-using Zappr.Api.Services;
 
 namespace Zappr.Api.GraphQL.Mutations
 {
     public class UserMutation : ObjectGraphType
     {
         private readonly IUserRepository _userRepository;
-        readonly TvdbService _tvdb;
 
 
-        public UserMutation(IUserRepository userRepository, TvdbService tvdbService)
+        public UserMutation(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _tvdb = tvdbService;
             Name = "Users";
 
             Field<UserType>(
