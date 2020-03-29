@@ -1,4 +1,4 @@
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
 
@@ -26,6 +26,30 @@ namespace Zappr.Api.GraphQL
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
                 resolve: context => _tvmaze.SearchByNameAsync(context.GetArgument<string>("name"))
             );
+
+            //Single Search by name
+            Field<SeriesType>(
+                "singlesearch",
+                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
+                resolve: context => _tvmaze.SingleSearchByNameAsync(context.GetArgument<string>("name"))
+            );
+
+
+            //Scheduled shows per country
+            Field<ListGraphType<SeriesType>>(
+                "today",
+                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "country" }),
+                resolve: context => _tvmaze.GetScheduleAsync(context.GetArgument<string>("country"))
+            );
+
+            //Scheduled shows per country for the whole week
+            Field<ListGraphType<SeriesType>>(
+                "thisweek",
+                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "country" }),
+                resolve: context => _tvmaze.GetScheduleMultipleDaysFromTodayAsync(context.GetArgument<string>("country"))
+            );
+
+
         }
     }
 }
