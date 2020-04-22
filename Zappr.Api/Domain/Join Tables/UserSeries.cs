@@ -1,7 +1,7 @@
 ﻿
 namespace Zappr.Api.Domain
 {
-    public class UserSeries
+    public abstract class UserSeries
     {
         public int UserId { get; set; }
         public User User { get; set; }

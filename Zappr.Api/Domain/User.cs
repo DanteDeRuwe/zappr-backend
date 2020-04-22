@@ -9,13 +9,12 @@ namespace Zappr.Api.Domain
         public string Email { get; set; }
         public string FullName { get; set; }
 
-
         // Nav Props
-        public List<UserSeries> WatchList { get; } = new List<UserSeries>();
-        public List<UserSeries> FavoriteSeries { get; } = new List<UserSeries>();
-        public List<UserSeries> RatedSeries { get; } = new List<UserSeries>();
-        public List<UserEpisode> WatchedEpisodes { get; } = new List<UserEpisode>();
-        public List<UserEpisode> RatedEpisodes { get; } = new List<UserEpisode>();
+        public List<UserWatchListedSeries> WatchListedSeries { get; } = new List<UserWatchListedSeries>();
+        public List<UserFavoriteSeries> FavoriteSeries { get; } = new List<UserFavoriteSeries>();
+        public List<UserRatedSeries> RatedSeries { get; } = new List<UserRatedSeries>();
+        public List<UserWatchedEpisode> WatchedEpisodes { get; } = new List<UserWatchedEpisode>();
+        public List<UserRatedEpisode> RatedEpisodes { get; } = new List<UserRatedEpisode>();
 
         // Constructor
         public User() { }
@@ -26,10 +25,10 @@ namespace Zappr.Api.Domain
         }
 
         // Methods
-        public void AddSeriesToWatchList(Series series) => WatchList.Add(new UserSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
-        public void AddFavoriteSeries(Series series) => FavoriteSeries.Add(new UserSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
-        public void AddWatchedEpisode(Episode episode) => WatchedEpisodes.Add(new UserEpisode { Episode = episode, EpisodeId = episode.Id, User = this, UserId = this.Id });
-        public void AddRatedEpisode(Episode episode) => RatedEpisodes.Add(new UserEpisode { Episode = episode, EpisodeId = episode.Id, User = this, UserId = this.Id });
-        public void AddRatedSeries(Series series) => RatedSeries.Add(new UserSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
+        public void AddSeriesToWatchList(Series series) => WatchListedSeries.Add(new UserWatchListedSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
+        public void AddFavoriteSeries(Series series) => FavoriteSeries.Add(new UserFavoriteSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
+        public void AddWatchedEpisode(Episode episode) => WatchedEpisodes.Add(new UserWatchedEpisode { Episode = episode, EpisodeId = episode.Id, User = this, UserId = this.Id });
+        public void AddRatedEpisode(Episode episode) => RatedEpisodes.Add(new UserRatedEpisode { Episode = episode, EpisodeId = episode.Id, User = this, UserId = this.Id });
+        public void AddRatedSeries(Series series) => RatedSeries.Add(new UserRatedSeries { Series = series, SeriesId = series.Id, User = this, UserId = this.Id });
     }
 }

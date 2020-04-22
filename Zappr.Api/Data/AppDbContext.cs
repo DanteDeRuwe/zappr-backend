@@ -26,8 +26,11 @@ namespace Zappr.Api.Data
             builder.ApplyConfiguration(new SeriesConfiguration());
 
             builder.ApplyConfiguration(new UserFavoriteSeriesConfiguration());
-            //builder.ApplyConfiguration(new UserWatchlistConfiguration()); TODO: make other joined entity
+            builder.ApplyConfiguration(new UserWatchlistedSeriesConfiguration());
+            builder.ApplyConfiguration(new UserRatedSeriesConfiguration());
+
             builder.ApplyConfiguration(new UserWatchedEpisodeConfiguration());
+            builder.ApplyConfiguration(new UserRatedEpisodeConfiguration());
 
             //builder.ApplyConfiguration(new CommentConfiguration());
             //builder.ApplyConfiguration(new RatingConfiguration());

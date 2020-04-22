@@ -4,9 +4,9 @@ using Zappr.Api.Domain;
 
 namespace Zappr.Api.Data.Configurations
 {
-    public class UserWatchedEpisodeConfiguration : IEntityTypeConfiguration<UserEpisode>
+    public class UserWatchedEpisodeConfiguration : IEntityTypeConfiguration<UserWatchedEpisode>
     {
-        public void Configure(EntityTypeBuilder<UserEpisode> builder)
+        public void Configure(EntityTypeBuilder<UserWatchedEpisode> builder)
         {
             builder.ToTable("UserWatchedEpsisode");
             builder.HasKey(ue => new { ue.UserId, ue.EpisodeId });

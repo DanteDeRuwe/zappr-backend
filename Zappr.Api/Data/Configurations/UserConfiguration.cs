@@ -12,8 +12,8 @@ namespace Zappr.Api.Data.Configurations
             builder.HasKey(u => u.Id);
 
             //Series
-            builder.HasMany(u => u.FavoriteSeries).WithOne(); ;
-            builder.HasMany(u => u.WatchList).WithOne();
+            builder.HasMany(u => u.FavoriteSeries).WithOne();
+            builder.HasMany(u => u.WatchListedSeries).WithOne();
             builder.HasMany(u => u.RatedSeries).WithOne();
 
             //Episodes
