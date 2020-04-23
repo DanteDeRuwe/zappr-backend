@@ -10,9 +10,9 @@ namespace Zappr.Api.Data.Configurations
         {
             builder.ToTable("Epsisode");
             builder.HasKey(e => e.Id);
-
+            /*
             builder.HasMany(e => e.Ratings).WithOne().OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(e => e.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(e => e.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);*/
         }
     }
 }

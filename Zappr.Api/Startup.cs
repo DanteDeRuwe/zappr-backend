@@ -67,6 +67,7 @@ namespace Zappr.Api
             // Types
             services.AddScoped<SeriesType>();
             services.AddScoped<UserType>();
+            services.AddScoped<EpisodeType>();
             services.AddScoped<UserInputType>();
 
             // Queries
@@ -92,9 +93,9 @@ namespace Zappr.Api
 
             }
 
-            //context.Database.EnsureDeleted();
-            //context.Database.EnsureCreated();
-            context.Database.Migrate();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            //context.Database.Migrate();
 
             app.UseCors("DefaultPolicy");
 
