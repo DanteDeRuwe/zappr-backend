@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +14,7 @@ namespace Zappr.Api.Services
     {
         public TVMazeService(IConfiguration configuration) => _configuration = configuration;
 
+        #region Series
 
         public async Task<Series> GetSeriesByIdAsync(int id)
         {
@@ -37,8 +38,7 @@ namespace Zappr.Api.Services
             }
         }
 
-
-        public async Task<List<Series>> SearchByNameAsync(string name)
+        public async Task<List<Series>> SearchSeriesByNameAsync(string name)
         {
             string baseUrl = "http://api.tvmaze.com/search/shows";
             string url = buildUrlWithQueries(baseUrl,
@@ -61,11 +61,11 @@ namespace Zappr.Api.Services
             else
             {
                 //TODO
-                throw new HttpRequestException($"Error in SearchByNameAsync, statuscode: {result.StatusCode}");
+                throw new HttpRequestException($"Error in SearchSeriesByNameAsync, statuscode: {result.StatusCode}");
             }
         }
 
-        public async Task<Series> SingleSearchByNameAsync(string name)
+        public async Task<Series> SingleSearchSeriesByNameAsync(string name)
         {
             string baseUrl = "http://api.tvmaze.com/singlesearch/shows";
             string url = buildUrlWithQueries(baseUrl,
@@ -83,10 +83,9 @@ namespace Zappr.Api.Services
             else
             {
                 //TODO
-                throw new HttpRequestException($"Error in SingleSearchByNameAsync, statuscode: {result.StatusCode}");
+                throw new HttpRequestException($"Error in SingleSearchSeriesByNameAsync, statuscode: {result.StatusCode}");
             }
         }
-
 
         public async Task<List<Series>> GetScheduleAsync(string countrycode, string date = null)
         {
@@ -114,7 +113,7 @@ namespace Zappr.Api.Services
             else
             {
                 //TODO
-                throw new HttpRequestException($"Error in SearchByNameAsync, statuscode: {result.StatusCode}");
+                throw new HttpRequestException($"Error in SearchSeriesByNameAsync, statuscode: {result.StatusCode}");
             }
         }
 
@@ -147,5 +146,7 @@ namespace Zappr.Api.Services
             OfficialSite = seriesObj.officialSite,
             NumberOfSeasons = seriesObj._embedded?.ToObject<dynamic>().seasons.Count
         };
+
+        #endregion
     }
 }

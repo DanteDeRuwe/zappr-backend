@@ -1,4 +1,4 @@
-﻿using GraphQL.Types;
+using GraphQL.Types;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
 
@@ -24,14 +24,14 @@ namespace Zappr.Api.GraphQL
             Field<ListGraphType<SeriesType>>(
                 "search",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
-                resolve: context => _tvmaze.SearchByNameAsync(context.GetArgument<string>("name"))
+                resolve: context => _tvmaze.SearchSeriesByNameAsync(context.GetArgument<string>("name"))
             );
 
             //Single Search by name
             Field<SeriesType>(
                 "singlesearch",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
-                resolve: context => _tvmaze.SingleSearchByNameAsync(context.GetArgument<string>("name"))
+                resolve: context => _tvmaze.SingleSearchSeriesByNameAsync(context.GetArgument<string>("name"))
             );
 
 
