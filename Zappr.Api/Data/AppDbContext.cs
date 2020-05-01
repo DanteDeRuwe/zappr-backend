@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Zappr.Api.Data.Configurations;
 using Zappr.Api.Domain;
 
 namespace Zappr.Api.Data
@@ -17,24 +16,11 @@ namespace Zappr.Api.Data
         // Constructor 
         public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+        // finds all classes that implement IEntityTypeConfiguration and applies their configurations
+        protected override void OnModelCreating(ModelBuilder modelBuilder) =>
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new EpisodeConfiguration());
-            builder.ApplyConfiguration(new SeriesConfiguration());
 
-            builder.ApplyConfiguration(new UserFavoriteSeriesConfiguration());
-            builder.ApplyConfiguration(new UserWatchlistedSeriesConfiguration());
-            builder.ApplyConfiguration(new UserRatedSeriesConfiguration());
 
-            builder.ApplyConfiguration(new UserWatchedEpisodeConfiguration());
-            builder.ApplyConfiguration(new UserRatedEpisodeConfiguration());
-
-            //builder.ApplyConfiguration(new CommentConfiguration());
-            //builder.ApplyConfiguration(new RatingConfiguration());
-
-        }
     }
 }
