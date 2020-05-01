@@ -13,8 +13,8 @@ namespace Zappr.Api.GraphQL.Types
         public SeriesType()
         {
             Field(s => s.Id).Description("The series ID");
-            Field(s => s.Name).Description("The name of the series");
 
+            Field(s => s.Name, nullable: true).Description("The name of the series");
             Field(s => s.Description, nullable: true).Description("A description for the series");
             Field(s => s.NumberOfSeasons, nullable: true).Description("The number of seasons of this series");
             Field(s => s.Network, nullable: true).Description("the network the series is currently airing on");

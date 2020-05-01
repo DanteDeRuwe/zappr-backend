@@ -20,6 +20,7 @@ namespace Zappr.Api.Data.Configurations
 
             builder.HasMany(s => s.Episodes).WithOne();
             //builder.HasMany(s => s.Comments).WithOne();
+            //builder.HasMany(s => s.Ratings).WithOne();
             //builder.HasMany(s => s.Characters).WithOne();
         }
     }
