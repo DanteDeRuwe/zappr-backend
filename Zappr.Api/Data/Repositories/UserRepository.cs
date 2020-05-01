@@ -16,15 +16,15 @@ namespace Zappr.Api.Data.Repositories
             _users = context.Users;
         }
 
-        public List<User> GetAll() => _users.ToList(); //just user data
+        public List<User> GetAll() => _users
+            .Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
+            .Include(u => u.WatchListedSeries).ThenInclude(us => us.Series)
+            .Include(u => u.RatedSeries).ThenInclude(us => us.Series)
+            .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode)
+            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode).ToList();
 
         // When getting by id, include all series and episode data
-        public User GetById(int id) => _users.Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
-                                            .Include(u => u.WatchListedSeries).ThenInclude(us => us.Series)
-                                            .Include(u => u.RatedSeries).ThenInclude(us => us.Series)
-                                            .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode)
-                                            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode)
-                                            .SingleOrDefault(u => u.Id == id);
+        public User GetById(int id) => GetAll().SingleOrDefault(u => u.Id == id);
 
         public User Add(User user)
         {
@@ -32,7 +32,9 @@ namespace Zappr.Api.Data.Repositories
             return user;
         }
 
-        public User Delete(User item) => throw new System.NotImplementedException(); //TODO
+        public User Delete(User user) => throw new System.NotImplementedException(); //TODO
+        public void Update(User user) => _context.Update(user);
         public void SaveChanges() => _context.SaveChanges();
+        public void SaveChangesAsync() => _context.SaveChangesAsync();
     }
 }
