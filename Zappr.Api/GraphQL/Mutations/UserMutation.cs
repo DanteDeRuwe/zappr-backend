@@ -1,5 +1,6 @@
 ﻿using GraphQL.Types;
 using System.Linq;
+using Zappr.Api.Data;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -10,11 +11,13 @@ namespace Zappr.Api.GraphQL.Mutations
     {
         private readonly IUserRepository _userRepository;
         private readonly TVMazeService _tvMaze;
+        private readonly AppDbContext _dbContext;
 
-        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze)
+        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, AppDbContext dbContext)
         {
             _userRepository = userRepository;
             _tvMaze = tvMaze;
+            _dbContext = dbContext;
             Name = "Users";
 
             Field<UserType>(
@@ -38,20 +41,33 @@ namespace Zappr.Api.GraphQL.Mutations
                 ),
                 resolve: async context =>
                 {
-                    //TODO check if episode in db
+                    int episodeId = context.GetArgument<int>("episodeId");
+                    int userId = context.GetArgument<int>("userId");
 
-                    //Get Episode from API
-                    var episode = await _tvMaze.GetEpisodeByIdAsync(context.GetArgument<int>("episodeId"));
-                    var series = await _tvMaze.GetSeriesByIdAsync(episode.SeriesId);
-                    episode.Series = series;
+                    // Get Episode from db or API
+                    var episode = _dbContext.Episodes.Any(e => e.Id == episodeId)
+                        ? _dbContext.Episodes.Single(e => e.Id == episodeId)
+                        : await _tvMaze.GetEpisodeByIdAsync(episodeId);
 
-                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    // Get its Series from db or API
+                    episode.Series = _dbContext.Series.Any(s => s.Id == episode.SeriesId)
+                            ? _dbContext.Series.SingleOrDefault(s => s.Id == episode.SeriesId)
+                            : await _tvMaze.GetSeriesByIdAsync(episode.SeriesId);
 
+                    // Get user
+                    var user = _userRepository.GetById(userId);
+
+                    // Add the episode to the users watched episodes
+                    int before = user.WatchedEpisodes.Count();
                     user.AddWatchedEpisode(episode);
+                    int after = user.WatchedEpisodes.Count();
 
+                    // Persist not needed if no stuff was added (this to prevent errors)
+                    if (before == after) return user;
+
+                    //else
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
-
                     return user;
                 }
             );

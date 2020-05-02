@@ -9,6 +9,9 @@ namespace Zappr.Api.Data
     {
         // DbSets
         public DbSet<User> Users { get; set; }
+        public DbSet<Series> Series { get; set; }
+        public DbSet<Episode> Episodes { get; set; }
+
         //public DbSet<Comment> Comments { get; set; }
         //public DbSet<Rating> Ratings { get; set; }
 
