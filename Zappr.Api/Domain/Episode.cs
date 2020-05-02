@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Zappr.Api.Domain
 {
     public class Episode
     {
-
         // Properties
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+
         public string? Name { get; set; }
         public string? Summary { get; set; }
-
         public int? Season { get; set; }
         public int Number { get; set; }
-
         public string? AirDate { get; set; }
         public string? AirTime { get; set; }
         public int? Runtime { get; set; }
-
         public string? Image { get; set; }
 
         // Nav Props

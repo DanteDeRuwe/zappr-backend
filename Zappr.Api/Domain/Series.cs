@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Zappr.Api.Domain
 {
     public class Series
     {
         // Properties
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] //Id will come from external API
         public int Id { get; set; }
-        public string Name { get; set; }
 
-        // Nullable properties
+        public string? Name { get; set; }
         public string? ImageUrl { get; set; }
         public string? Description { get; set; }
         public int? NumberOfSeasons { get; set; }
