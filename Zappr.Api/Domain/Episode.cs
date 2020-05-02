@@ -18,7 +18,10 @@ namespace Zappr.Api.Domain
         public int? Runtime { get; set; }
         public string? Image { get; set; }
 
+        public int SeriesId { get; set; }
+
         // Nav Props
+        public Series Series { get; set; }
         public List<Rating> Ratings { get; } = new List<Rating>();
         public List<Comment> Comments { get; } = new List<Comment>();
 

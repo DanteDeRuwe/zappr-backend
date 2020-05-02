@@ -1,4 +1,5 @@
-using GraphQL.Types;
+﻿using GraphQL.Types;
+using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -38,8 +39,12 @@ namespace Zappr.Api.GraphQL.Mutations
                 resolve: async context =>
                 {
                     //TODO check if episode in db
+
                     //Get Episode from API
                     var episode = await _tvMaze.GetEpisodeByIdAsync(context.GetArgument<int>("episodeId"));
+                    var series = await _tvMaze.GetSeriesByIdAsync(episode.SeriesId);
+                    episode.Series = series;
+
                     var user = _userRepository.GetById(context.GetArgument<int>("userId"));
 
                     user.AddWatchedEpisode(episode);

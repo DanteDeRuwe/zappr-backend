@@ -17,6 +17,8 @@ namespace Zappr.Api.GraphQL.Types
             Field(e => e.AirTime, nullable: true).Description("the time the episode aires on");
             Field(e => e.Runtime, nullable: true).Description("the duration in minutes");
             Field(e => e.Image, nullable: true).Description("An image url for the episode");
+
+            Field<SeriesType>("series", resolve: context => context.Source.Series);
         }
 
 

@@ -20,8 +20,9 @@ namespace Zappr.Api.Data.Repositories
             .Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
             .Include(u => u.WatchListedSeries).ThenInclude(us => us.Series)
             .Include(u => u.RatedSeries).ThenInclude(us => us.Series)
-            .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode)
-            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode).ToList();
+            .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode).ThenInclude(e => e.Series)
+            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode).ThenInclude(e => e.Series)
+            .ToList();
 
         // When getting by id, include all series and episode data
         public User GetById(int id) => GetAll().SingleOrDefault(u => u.Id == id);

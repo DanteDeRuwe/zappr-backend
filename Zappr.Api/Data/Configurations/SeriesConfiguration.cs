@@ -18,7 +18,7 @@ namespace Zappr.Api.Data.Configurations
                 g => JsonSerializer.Deserialize<List<string>>(g, default)
             );
 
-            builder.HasMany(s => s.Episodes).WithOne();
+            builder.HasMany(s => s.Episodes).WithOne(e => e.Series).HasForeignKey(e => e.SeriesId);
             //builder.HasMany(s => s.Comments).WithOne();
             //builder.HasMany(s => s.Ratings).WithOne();
             //builder.HasMany(s => s.Characters).WithOne();

@@ -153,9 +153,8 @@ namespace Zappr.Api.Services
         public async Task<Episode> GetEpisodeByIdAsync(int id)
         {
             string baseUrl = "http://api.tvmaze.com/episodes/" + id;
-            /*            string url = buildUrlWithQueries(baseUrl,
-                            new Dictionary<string, string>() { { "embed", "show" } });*/
-            string url = baseUrl;
+            string url = buildUrlWithQueries(baseUrl,
+                new Dictionary<string, string>() { { "embed", "show" } });
             var result = GetHttpResponse(url);
 
 
@@ -183,7 +182,8 @@ namespace Zappr.Api.Services
             AirDate = data.airdate,
             AirTime = data.airtime,
             Runtime = data.runtime,
-            Image = data.image?.ToObject<dynamic>()?.medium
+            Image = data.image?.ToObject<dynamic>()?.medium,
+            SeriesId = data._embedded?.ToObject<dynamic>()?.show?.ToObject<dynamic>()?.id
         };
 
 
