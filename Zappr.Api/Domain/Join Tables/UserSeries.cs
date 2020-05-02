@@ -8,5 +8,12 @@ namespace Zappr.Api.Domain
 
         public int SeriesId { get; set; }
         public Series Series { get; set; }
+
+        public override bool Equals(object other) =>
+            other?.GetType() == typeof(UserSeries)
+            && UserId == ((UserSeries)other).UserId
+            && SeriesId == ((UserSeries)other).SeriesId;
+
+        public override int GetHashCode() => UserId.GetHashCode() ^ SeriesId.GetHashCode(); //https://stackoverflow.com/a/70375/12641623
     }
 }
