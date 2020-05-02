@@ -8,7 +8,7 @@ namespace Zappr.Api.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<UserWatchedEpisode> builder)
         {
-            builder.ToTable("UserWatchedEpsisode");
+            builder.ToTable("UserWatchedEpisode");
             builder.HasKey(ue => new { ue.UserId, ue.EpisodeId });
 
             builder.HasOne(ue => ue.User).WithMany(u => u.WatchedEpisodes).HasForeignKey(ue => ue.UserId);
