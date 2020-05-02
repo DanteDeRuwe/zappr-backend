@@ -93,8 +93,8 @@ namespace Zappr.Api
 
             }
 
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
             //context.Database.Migrate();
 
             app.UseCors("DefaultPolicy");

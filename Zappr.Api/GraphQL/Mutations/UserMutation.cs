@@ -1,17 +1,19 @@
 ﻿using GraphQL.Types;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Services;
 
 namespace Zappr.Api.GraphQL.Mutations
 {
     public class UserMutation : ObjectGraphType
     {
         private readonly IUserRepository _userRepository;
+        private readonly TVMazeService _tvMaze;
 
-
-        public UserMutation(IUserRepository userRepository)
+        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze)
         {
             _userRepository = userRepository;
+            _tvMaze = tvMaze;
             Name = "Users";
 
             Field<UserType>(
@@ -26,9 +28,29 @@ namespace Zappr.Api.GraphQL.Mutations
                   _userRepository.SaveChanges();
                   return added;
               });
+
+            FieldAsync<UserType>(
+                "addWatchedEpisode",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }
+                ),
+                resolve: async context =>
+                {
+                    //TODO check if episode in db
+                    //Get Episode from API
+                    var episode = await _tvMaze.GetEpisodeByIdAsync(context.GetArgument<int>("episodeId"));
+                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+
+                    user.AddWatchedEpisode(episode);
+
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+
+                    return user;
+                }
+            );
+
         }
-
-
-
     }
 }
