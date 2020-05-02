@@ -183,7 +183,7 @@ namespace Zappr.Api.Services
             AirDate = data.airdate,
             AirTime = data.airtime,
             Runtime = data.runtime,
-            Image = data.image?.medium
+            Image = data.image?.ToObject<dynamic>()?.medium
         };
 
 
