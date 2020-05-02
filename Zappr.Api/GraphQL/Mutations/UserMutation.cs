@@ -1,4 +1,4 @@
-﻿using GraphQL.Types;
+using GraphQL.Types;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -43,6 +43,26 @@ namespace Zappr.Api.GraphQL.Mutations
                     var user = _userRepository.GetById(context.GetArgument<int>("userId"));
 
                     user.AddWatchedEpisode(episode);
+
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+
+                    return user;
+                }
+            );
+
+            Field<UserType>(
+                "removeWatchedEpisode",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }
+                ),
+                resolve: context =>
+                {
+                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    var episode = user.WatchedEpisodes.SingleOrDefault(we => we.EpisodeId == context.GetArgument<int>("episodeId"));
+
+                    user.WatchedEpisodes.Remove(episode);
 
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
