@@ -8,11 +8,11 @@ namespace Zappr.Api.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Episode> builder)
         {
-            builder.ToTable("Epsisode");
+            builder.ToTable("Episode");
             builder.HasKey(e => e.Id);
 
             builder.HasOne(e => e.Series).WithMany(s => s.Episodes).HasForeignKey(e => e.SeriesId);
-            builder.HasMany(s => s.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(s => s.Comments).WithOne();
 
             //builder.HasMany(e => e.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
