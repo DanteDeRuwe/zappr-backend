@@ -1,5 +1,4 @@
-﻿using GraphQL.Types;
-using Zappr.Api.Data;
+using GraphQL.Types;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -10,7 +9,6 @@ namespace Zappr.Api.GraphQL.Mutations
     {
         private readonly IUserRepository _userRepository;
         private readonly TVMazeService _tvMaze;
-        private readonly AppDbContext _dbContext;
         private readonly ISeriesRepository _seriesRepository;
 
         public SeriesMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository)
@@ -45,8 +43,12 @@ namespace Zappr.Api.GraphQL.Mutations
                     Comment comment = new Comment(commentText, author);
                     series.AddComment(comment);
 
-                    _dbContext.Series.Update(series);
-                    _dbContext.SaveChanges();
+                    _seriesRepository.Update(series);
+                    _seriesRepository.SaveChanges();
+
+                    return series;
+
+                });
 
                     return series;
 
