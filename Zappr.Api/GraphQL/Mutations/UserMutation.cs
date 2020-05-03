@@ -142,6 +142,57 @@ namespace Zappr.Api.GraphQL.Mutations
                 }
             );
 
+            FieldAsync<UserType>(
+                "addSeriesToWatchList",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
+                ),
+                resolve: async context =>
+                {
+                    // Args
+                    int seriesId = context.GetArgument<int>("seriesId");
+                    int userId = context.GetArgument<int>("userId");
+
+                    // Get user
+                    var user = _userRepository.GetById(userId);
+
+                    // Check if seriesid not already in watchlist
+                    if (user.WatchListedSeries.Any(fs => fs.SeriesId == seriesId)) return user;
+
+                    // Get series from db or API
+                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
+                        ? _dbContext.Series.Single(s => s.Id == seriesId)
+                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
+
+                    // Add the favorite and persist
+                    user.AddSeriesToWatchList(series);
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+                    return user;
+                }
+            );
+
+            Field<UserType>(
+                "removeSeriesFromWatchList",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
+                ),
+                resolve: context =>
+                {
+                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    var series = user.WatchListedSeries.Single(fs => fs.SeriesId == context.GetArgument<int>("seriesId"));
+
+                    user.WatchListedSeries.Remove(series);
+
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+
+                    return user;
+                }
+            );
+
         }
     }
 }

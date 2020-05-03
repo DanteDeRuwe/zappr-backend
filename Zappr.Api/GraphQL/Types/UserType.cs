@@ -15,6 +15,7 @@ namespace Zappr.Api.GraphQL.Types
             Field(u => u.Email);
 
             // We resolve these ourselves to skip the joined entity
+            Field<ListGraphType<EpisodeType>>("watchListedSeries", "The series this user has watchlisted", resolve: c => c.Source.WatchListedSeries.Select(ue => ue.Series));
             Field<ListGraphType<SeriesType>>("favoriteSeries", "The series this user has favorited", resolve: c => c.Source.FavoriteSeries.Select(us => us.Series));
             Field<ListGraphType<EpisodeType>>("watchedEpisodes", "The episodes this user has watched", resolve: c => c.Source.WatchedEpisodes.Select(ue => ue.Episode));
         }
