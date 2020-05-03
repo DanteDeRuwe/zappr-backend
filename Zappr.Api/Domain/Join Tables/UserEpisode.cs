@@ -1,4 +1,4 @@
-﻿namespace Zappr.Api.Domain
+namespace Zappr.Api.Domain
 {
     public abstract class UserEpisode
     {
@@ -9,7 +9,7 @@
         public Episode Episode { get; set; }
 
         public override bool Equals(object other) =>
-            other?.GetType() == typeof(UserEpisode)
+            other?.GetType() == GetType()
             && UserId == ((UserEpisode)other).UserId
             && EpisodeId == ((UserEpisode)other).EpisodeId;
 
