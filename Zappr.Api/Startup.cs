@@ -43,7 +43,7 @@ namespace Zappr.Api
             //DI
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
-            //Making things work ï¿½\_( ")_/ï¿½
+            //Making things work ¯\_( ")_/¯
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
@@ -82,6 +82,7 @@ namespace Zappr.Api
 
             // Mutations
             services.AddScoped<UserMutation>();
+            services.AddScoped<SeriesMutation>();
             services.AddScoped<ZapprMutation>();
 
             // GraphQL
