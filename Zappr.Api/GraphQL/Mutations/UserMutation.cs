@@ -41,8 +41,15 @@ namespace Zappr.Api.GraphQL.Mutations
                 ),
                 resolve: async context =>
                 {
+                    // Args
                     int episodeId = context.GetArgument<int>("episodeId");
                     int userId = context.GetArgument<int>("userId");
+
+                    // Get user
+                    var user = _userRepository.GetById(userId);
+
+                    // Check if episodeid not already in watched
+                    if (user.WatchedEpisodes.Any(fs => fs.EpisodeId == episodeId)) return user;
 
                     // Get Episode from db or API
                     var episode = _dbContext.Episodes.Any(e => e.Id == episodeId)
@@ -54,18 +61,9 @@ namespace Zappr.Api.GraphQL.Mutations
                             ? _dbContext.Series.SingleOrDefault(s => s.Id == episode.SeriesId)
                             : await _tvMaze.GetSeriesByIdAsync(episode.SeriesId);
 
-                    // Get user
-                    var user = _userRepository.GetById(userId);
 
-                    // Add the episode to the users watched episodes
-                    int before = user.WatchedEpisodes.Count();
+                    // Add the episode to the users watched episodes and persist
                     user.AddWatchedEpisode(episode);
-                    int after = user.WatchedEpisodes.Count();
-
-                    // Persist not needed if no stuff was added (this to prevent errors)
-                    if (before == after) return user;
-
-                    //else
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
                     return user;
@@ -101,26 +99,23 @@ namespace Zappr.Api.GraphQL.Mutations
                 ),
                 resolve: async context =>
                 {
+                    // Args
                     int seriesId = context.GetArgument<int>("seriesId");
                     int userId = context.GetArgument<int>("userId");
-
-                    // Get Episode from db or API
-                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
-                        ? _dbContext.Series.Single(s => s.Id == seriesId)
-                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
 
                     // Get user
                     var user = _userRepository.GetById(userId);
 
-                    // Add the episode to the users watched episodes
-                    int before = user.WatchedEpisodes.Count();
+                    // Check if seriesid not already in favorites
+                    if (user.FavoriteSeries.Any(fs => fs.SeriesId == seriesId)) return user;
+
+                    // Get series from db or API
+                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
+                        ? _dbContext.Series.Single(s => s.Id == seriesId)
+                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
+
+                    // Add the favorite and persist
                     user.AddFavoriteSeries(series);
-                    int after = user.WatchedEpisodes.Count();
-
-                    // Persist not needed if no stuff was added (this to prevent errors)
-                    if (before == after) return user;
-
-                    //else
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
                     return user;
