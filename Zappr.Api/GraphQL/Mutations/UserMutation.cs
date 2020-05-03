@@ -92,6 +92,41 @@ namespace Zappr.Api.GraphQL.Mutations
                 }
             );
 
+
+            FieldAsync<UserType>(
+                "addFavoriteSeries",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
+                ),
+                resolve: async context =>
+                {
+                    int seriesId = context.GetArgument<int>("seriesId");
+                    int userId = context.GetArgument<int>("userId");
+
+                    // Get Episode from db or API
+                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
+                        ? _dbContext.Series.Single(s => s.Id == seriesId)
+                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
+
+                    // Get user
+                    var user = _userRepository.GetById(userId);
+
+                    // Add the episode to the users watched episodes
+                    int before = user.WatchedEpisodes.Count();
+                    user.AddFavoriteSeries(series);
+                    int after = user.WatchedEpisodes.Count();
+
+                    // Persist not needed if no stuff was added (this to prevent errors)
+                    if (before == after) return user;
+
+                    //else
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+                    return user;
+                }
+            );
+
         }
     }
 }
