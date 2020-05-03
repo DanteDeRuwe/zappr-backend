@@ -1,6 +1,5 @@
 ﻿using GraphQL.Types;
 using System.Linq;
-using Zappr.Api.Data;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -11,13 +10,17 @@ namespace Zappr.Api.GraphQL.Mutations
     {
         private readonly IUserRepository _userRepository;
         private readonly TVMazeService _tvMaze;
-        private readonly AppDbContext _dbContext;
+        private readonly ISeriesRepository _seriesRepository;
+        private readonly IEpisodeRepository _episodeRepository;
 
-        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, AppDbContext dbContext)
+        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository,
+            IEpisodeRepository episodeRepository)
         {
             _userRepository = userRepository;
             _tvMaze = tvMaze;
-            _dbContext = dbContext;
+            _seriesRepository = seriesRepository;
+            _episodeRepository = episodeRepository;
+
             Name = "Users";
 
             Field<UserType>(
@@ -52,15 +55,10 @@ namespace Zappr.Api.GraphQL.Mutations
                     if (user.WatchedEpisodes.Any(fs => fs.EpisodeId == episodeId)) return user;
 
                     // Get Episode from db or API
-                    var episode = _dbContext.Episodes.Any(e => e.Id == episodeId)
-                        ? _dbContext.Episodes.Single(e => e.Id == episodeId)
-                        : await _tvMaze.GetEpisodeByIdAsync(episodeId);
+                    var episode = await _episodeRepository.GetByIdAsync(episodeId);
 
                     // Get its Series from db or API
-                    episode.Series = _dbContext.Series.Any(s => s.Id == episode.SeriesId)
-                            ? _dbContext.Series.SingleOrDefault(s => s.Id == episode.SeriesId)
-                            : await _tvMaze.GetSeriesByIdAsync(episode.SeriesId);
-
+                    episode.Series = await _seriesRepository.GetByIdAsync(episode.SeriesId);
 
                     // Add the episode to the users watched episodes and persist
                     user.AddWatchedEpisode(episode);
@@ -110,9 +108,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     if (user.FavoriteSeries.Any(fs => fs.SeriesId == seriesId)) return user;
 
                     // Get series from db or API
-                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
-                        ? _dbContext.Series.Single(s => s.Id == seriesId)
-                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
+                    var series = await _seriesRepository.GetByIdAsync(seriesId);
 
                     // Add the favorite and persist
                     user.AddFavoriteSeries(series);
@@ -161,9 +157,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     if (user.WatchListedSeries.Any(fs => fs.SeriesId == seriesId)) return user;
 
                     // Get series from db or API
-                    var series = _dbContext.Series.Any(s => s.Id == seriesId)
-                        ? _dbContext.Series.Single(s => s.Id == seriesId)
-                        : await _tvMaze.GetSeriesByIdAsync(seriesId);
+                    var series = await _seriesRepository.GetByIdAsync(seriesId);
 
                     // Add the favorite and persist
                     user.AddSeriesToWatchList(series);
