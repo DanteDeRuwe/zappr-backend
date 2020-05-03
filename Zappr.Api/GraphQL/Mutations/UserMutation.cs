@@ -122,6 +122,26 @@ namespace Zappr.Api.GraphQL.Mutations
                 }
             );
 
+            Field<UserType>(
+                "removeFavoriteSeries",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
+                ),
+                resolve: context =>
+                {
+                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    var series = user.FavoriteSeries.Single(fs => fs.SeriesId == context.GetArgument<int>("seriesId"));
+
+                    bool removed = user.FavoriteSeries.Remove(series);
+
+                    _userRepository.Update(user);
+                    _userRepository.SaveChanges();
+
+                    return user;
+                }
+            );
+
         }
     }
 }
