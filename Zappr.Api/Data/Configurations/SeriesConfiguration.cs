@@ -19,7 +19,7 @@ namespace Zappr.Api.Data.Configurations
             );
 
             builder.HasMany(s => s.Episodes).WithOne(e => e.Series).HasForeignKey(e => e.SeriesId);
-            //builder.HasMany(s => s.Comments).WithOne();
+            builder.HasMany(s => s.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
             //builder.HasMany(s => s.Ratings).WithOne();
             //builder.HasMany(s => s.Characters).WithOne();
         }

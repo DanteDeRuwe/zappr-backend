@@ -9,7 +9,7 @@ namespace Zappr.Api.Domain
         public string Text { get; set; }
 
         // Nav Props
-        public User Author { get; private set; }
+        public User Author { get; set; }
         public List<Comment> Replies = new List<Comment>();
 
         // Constructors

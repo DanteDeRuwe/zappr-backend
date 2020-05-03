@@ -70,6 +70,9 @@ namespace Zappr.Api
             services.AddScoped<SeriesType>();
             services.AddScoped<UserType>();
             services.AddScoped<EpisodeType>();
+            services.AddScoped<CommentType>();
+
+            // Input Types
             services.AddScoped<UserInputType>();
 
             // Queries
