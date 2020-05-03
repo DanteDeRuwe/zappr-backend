@@ -133,7 +133,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     var user = _userRepository.GetById(context.GetArgument<int>("userId"));
                     var series = user.FavoriteSeries.Single(fs => fs.SeriesId == context.GetArgument<int>("seriesId"));
 
-                    bool removed = user.FavoriteSeries.Remove(series);
+                    user.FavoriteSeries.Remove(series);
 
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
