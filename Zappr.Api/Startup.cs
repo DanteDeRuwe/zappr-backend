@@ -43,7 +43,7 @@ namespace Zappr.Api
             //DI
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
-            //Making things work ¯\_( ")_/¯
+            //Making things work ï¿½\_( ")_/ï¿½
             services.Configure<IISServerOptions>(options => options.AllowSynchronousIO = true);
             services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
 
@@ -60,6 +60,8 @@ namespace Zappr.Api
 
             //Repos
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ISeriesRepository, SeriesRepository>();
+            services.AddTransient<IEpisodeRepository, EpisodeRepository>();
 
             //Schema
             services.AddTransient<ISchema, ZapprSchema>();
