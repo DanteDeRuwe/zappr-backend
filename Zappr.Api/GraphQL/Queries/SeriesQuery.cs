@@ -1,4 +1,5 @@
 ﻿using GraphQL.Types;
+using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
 
@@ -6,43 +7,48 @@ namespace Zappr.Api.GraphQL
 {
     public class SeriesQuery : ObjectGraphType
     {
-        readonly TVMazeService _tvmaze;
+        private readonly ISeriesRepository _seriesRepository;
+        private readonly TVMazeService _tvmaze;
 
-        public SeriesQuery(TVMazeService tvMazeService)
+        public SeriesQuery(ISeriesRepository seriesRepository, TVMazeService tvMaze)
         {
-            _tvmaze = tvMazeService;
+            _seriesRepository = seriesRepository;
+            _tvmaze = tvMaze;
             Name = "Series";
 
             // get by id
             Field<SeriesType>(
                 "get",
                 arguments: new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" }),
-                resolve: context => _tvmaze.GetSeriesByIdAsync(context.GetArgument<int>("id"))
+                resolve: context => _seriesRepository.GetByIdAsync(context.GetArgument<int>("id"))
             );
 
-            //Search by name
+            //Search by name (note, this only pulls from external API: less data)
             Field<ListGraphType<SeriesType>>(
                 "search",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
                 resolve: context => _tvmaze.SearchSeriesByNameAsync(context.GetArgument<string>("name"))
             );
 
-            //Single Search by name
-            Field<SeriesType>(
-                "singlesearch",
-                arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
-                resolve: context => _tvmaze.SingleSearchSeriesByNameAsync(context.GetArgument<string>("name"))
-            );
+            FieldAsync<SeriesType>(
+            "singlesearch",
+            arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
+            resolve: async context =>
+            {
+                var res = await _tvmaze.SingleSearchSeriesByNameAsync(context.GetArgument<string>("name"));
+                //Look up in db if possible for full results
+                return await _seriesRepository.GetByIdAsync(res.Id);
+            });
 
 
-            //Scheduled shows per country
+            //Scheduled shows per country (note, this only pulls from external API: less data)
             Field<ListGraphType<SeriesType>>(
                 "today",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "country" }),
                 resolve: context => _tvmaze.GetScheduleAsync(context.GetArgument<string>("country"))
             );
 
-            //Scheduled shows per country for the whole week
+            //Scheduled shows per country for the whole week (note, this only pulls from external API: less data)
             Field<ListGraphType<SeriesType>>(
                 "schedule",
                 arguments: new QueryArguments(
