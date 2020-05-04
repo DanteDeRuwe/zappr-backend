@@ -8,8 +8,8 @@ namespace Zappr.Api.GraphQL
         {
             Name = "Query";
 
-            Field<SeriesQuery>("series", resolve: context => new { });
-            Field<UserQuery>("users", resolve: context => new { });
+            Field<SeriesQuery>("seriesQuery", resolve: context => new { });
+            Field<UserQuery>("userQuery", resolve: context => new { });
         }
 
     }

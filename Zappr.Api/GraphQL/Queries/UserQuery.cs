@@ -10,8 +10,7 @@ namespace Zappr.Api.GraphQL
         private readonly UserRepository _userRepository;
         public UserQuery(IUserRepository userRepository)
         {
-            Name = "Users";
-
+            Name = "UserQuery";
             _userRepository = (UserRepository)userRepository;
 
 

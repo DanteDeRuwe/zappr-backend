@@ -21,7 +21,7 @@ namespace Zappr.Api.GraphQL.Mutations
             _seriesRepository = seriesRepository;
             _episodeRepository = episodeRepository;
 
-            Name = "Users";
+            Name = "UserMutation";
 
             Field<UserType>(
               "createUser",

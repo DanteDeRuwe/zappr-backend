@@ -17,7 +17,7 @@ namespace Zappr.Api.GraphQL.Mutations
             _userRepository = userRepository;
             _tvMaze = tvMaze;
             _seriesRepository = seriesRepository;
-            Name = "Series";
+            Name = "SeriesMutation";
 
 
             FieldAsync<SeriesType>(

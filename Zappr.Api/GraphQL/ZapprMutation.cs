@@ -9,8 +9,8 @@ namespace Zappr.Api.GraphQL
         {
             Name = "Mutation";
 
-            Field<UserMutation>("users", resolve: context => new { });
-            Field<SeriesMutation>("series", resolve: context => new { });
+            Field<UserMutation>("userMutation", resolve: context => new { });
+            Field<SeriesMutation>("seriesMutation", resolve: context => new { });
         }
     }
 }

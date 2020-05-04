@@ -14,7 +14,7 @@ namespace Zappr.Api.GraphQL
         {
             _seriesRepository = seriesRepository;
             _tvmaze = tvMaze;
-            Name = "Series";
+            Name = "SeriesQuery";
 
             // get by id
             Field<SeriesType>(
