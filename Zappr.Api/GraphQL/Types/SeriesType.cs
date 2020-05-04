@@ -26,6 +26,7 @@ namespace Zappr.Api.GraphQL.Types
             Field(s => s.OfficialSite, nullable: true).Description("The official website of this series");
 
             Field<ListGraphType<CommentType>>("comments", "The comments the series has received", resolve: c => c.Source.Comments);
+            Field<DecimalGraphType>("averageRating", "The total average rating the series has received", resolve: c => c.Source.AverageRating);
 
             //Field(s => s.Episodes).Description("The episodes that belong to this series");
             //Field(s => s.Characters).Description("The characters that play in this series");

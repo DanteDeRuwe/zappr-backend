@@ -19,9 +19,10 @@ namespace Zappr.Api.Data.Repositories
         public List<User> GetAll() => _users
             .Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
             .Include(u => u.WatchListedSeries).ThenInclude(us => us.Series)
-            .Include(u => u.RatedSeries).ThenInclude(us => us.Series)
+            .Include(u => u.RatedSeries).ThenInclude(us => us.Series).ThenInclude(s => s.Ratings)
             .Include(u => u.WatchedEpisodes).ThenInclude(ue => ue.Episode).ThenInclude(e => e.Series)
             .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode).ThenInclude(e => e.Series)
+            .Include(u => u.RatedEpisodes).ThenInclude(ue => ue.Episode.Ratings)
             .ToList();
 
         // When getting by id, include all series and episode data

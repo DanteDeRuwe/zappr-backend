@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Zappr.Api.Domain
 {
@@ -26,6 +27,9 @@ namespace Zappr.Api.Domain
         public List<Rating> Ratings { get; } = new List<Rating>();
         public List<Comment> Comments { get; } = new List<Comment>();
 
+        //Calculated Properties
+        public double AverageRating => Ratings.Any() ? Ratings.Average(r => r.Percentage) : 0.0;
+
         // Constructors
         public Series() { }
 
@@ -36,7 +40,7 @@ namespace Zappr.Api.Domain
 
         public override bool Equals(object obj) =>
             //Check for null and compare run-time types.
-            (obj != null) && this.GetType() == obj.GetType() && Id == ((Series)obj).Id;
+            (obj != null) && GetType() == obj.GetType() && Id == ((Series)obj).Id;
 
         public override int GetHashCode() => Id;
     }

@@ -71,6 +71,7 @@ namespace Zappr.Api
             services.AddScoped<UserType>();
             services.AddScoped<EpisodeType>();
             services.AddScoped<CommentType>();
+            services.AddScoped<RatingType>();
 
             // Input Types
             services.AddScoped<UserInputType>();
