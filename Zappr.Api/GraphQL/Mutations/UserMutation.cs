@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL.Authorization;
+using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
@@ -23,18 +24,21 @@ namespace Zappr.Api.GraphQL.Mutations
 
             Name = "UserMutation";
 
+            //Auth
+            this.AuthorizeWith("UserPolicy");
+
             Field<UserType>(
-              "createUser",
-              arguments: new QueryArguments(
-                new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
-              ),
-              resolve: context =>
-              {
-                  var user = context.GetArgument<User>("user");
-                  var added = _userRepository.Add(user);
-                  _userRepository.SaveChanges();
-                  return added;
-              });
+                "createUser",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
+                ),
+                resolve: context =>
+                {
+                    var user = context.GetArgument<User>("user");
+                    var added = _userRepository.Add(user);
+                    _userRepository.SaveChanges();
+                    return added;
+                });
 
             FieldAsync<UserType>(
                 "addWatchedEpisode",

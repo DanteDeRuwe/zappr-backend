@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL.Authorization;
+using GraphQL.Types;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
@@ -13,9 +14,11 @@ namespace Zappr.Api.GraphQL
             Name = "UserQuery";
             _userRepository = (UserRepository)userRepository;
 
+            //Auth
+            this.AuthorizeWith("UserPolicy");
 
             // get all
-            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll());
+            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll()).AuthorizeWith("AdminPolicy");
 
             // get by id
             QueryArguments args = new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" });

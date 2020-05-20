@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using GraphQL.Authorization;
+using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
@@ -19,6 +20,8 @@ namespace Zappr.Api.GraphQL.Mutations
             _seriesRepository = seriesRepository;
             Name = "SeriesMutation";
 
+            //Auth
+            this.AuthorizeWith("UserPolicy");
 
             FieldAsync<SeriesType>(
                 "addComment",

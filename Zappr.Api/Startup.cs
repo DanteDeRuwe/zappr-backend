@@ -2,6 +2,7 @@ using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -9,10 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 using Zappr.Api.Data;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL;
+using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Services;
@@ -38,6 +41,21 @@ namespace Zappr.Api
                         .WithMethods("GET", "POST")
                         .WithOrigins("http://localhost:4200");
                 });
+            });
+
+
+            //JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://localhost:5001";
+                });
+
+            //GraphQLAuthorization
+            services.AddGraphQLAuth(_ =>
+            {
+                _.AddPolicy("UserPolicy", p => p.RequireClaim(ClaimTypes.Role, "User"));
+                _.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
             });
 
             //DI
@@ -106,6 +124,9 @@ namespace Zappr.Api
 
             app.UseCors("DefaultPolicy");
 
+            app.UseAuthentication();
+
+            app.UseMiddleware<MapRolesForGraphQLMiddleware>();
             app.UseGraphQL<ISchema>("/graphql");
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
