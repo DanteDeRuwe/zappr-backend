@@ -348,3 +348,5 @@ healthchecksdb
 *.cd
 
 .editorconfig
+
+Zappr.Api/appsettings.json
