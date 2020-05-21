@@ -3,9 +3,9 @@ using GraphQL.Authorization;
 using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.Domain;
+using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Helpers;
-using Zappr.Api.Services;
 using BCr = BCrypt.Net.BCrypt;
 
 namespace Zappr.Api.GraphQL.Mutations
@@ -13,16 +13,13 @@ namespace Zappr.Api.GraphQL.Mutations
     public class UserMutation : ObjectGraphType
     {
         private readonly IUserRepository _userRepository;
-        private readonly TVMazeService _tvMaze;
         private readonly ISeriesRepository _seriesRepository;
         private readonly IEpisodeRepository _episodeRepository;
         private readonly TokenHelper _tokenHelper;
 
-        public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository,
-            IEpisodeRepository episodeRepository, TokenHelper tokenHelper)
+        public UserMutation(IUserRepository userRepository, ISeriesRepository seriesRepository, IEpisodeRepository episodeRepository, TokenHelper tokenHelper)
         {
             _userRepository = userRepository;
-            _tvMaze = tvMaze;
             _seriesRepository = seriesRepository;
             _episodeRepository = episodeRepository;
             _tokenHelper = tokenHelper;
@@ -76,17 +73,14 @@ namespace Zappr.Api.GraphQL.Mutations
 
             FieldAsync<UserType>(
                 "addWatchedEpisode",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }),
                 resolve: async context =>
                 {
                     // Args
                     int episodeId = context.GetArgument<int>("episodeId");
-                    int userId = context.GetArgument<int>("userId");
 
-                    // Get user
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
                     var user = _userRepository.GetById(userId);
 
                     // Check if episodeid not already in watched
@@ -106,17 +100,16 @@ namespace Zappr.Api.GraphQL.Mutations
 
             Field<UserType>(
                 "removeWatchedEpisode",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "episodeId" }),
                 resolve: context =>
                 {
-                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
+                    var user = _userRepository.GetById(userId);
+
+                    // Get episode and remove it from watched
                     var episode = user.WatchedEpisodes.SingleOrDefault(we => we.EpisodeId == context.GetArgument<int>("episodeId"));
-
                     user.WatchedEpisodes.Remove(episode);
-
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
 
@@ -127,17 +120,13 @@ namespace Zappr.Api.GraphQL.Mutations
 
             FieldAsync<UserType>(
                 "addFavoriteSeries",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }),
                 resolve: async context =>
                 {
-                    // Args
                     int seriesId = context.GetArgument<int>("seriesId");
-                    int userId = context.GetArgument<int>("userId");
 
-                    // Get user
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
                     var user = _userRepository.GetById(userId);
 
                     // Check if seriesid not already in favorites
@@ -162,11 +151,13 @@ namespace Zappr.Api.GraphQL.Mutations
                 ),
                 resolve: context =>
                 {
-                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
+                    var user = _userRepository.GetById(userId);
+
+                    //Get series and remove from favorites
                     var series = user.FavoriteSeries.Single(fs => fs.SeriesId == context.GetArgument<int>("seriesId"));
-
                     user.FavoriteSeries.Remove(series);
-
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
 
@@ -176,17 +167,14 @@ namespace Zappr.Api.GraphQL.Mutations
 
             FieldAsync<UserType>(
                 "addSeriesToWatchList",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }),
                 resolve: async context =>
                 {
                     // Args
                     int seriesId = context.GetArgument<int>("seriesId");
-                    int userId = context.GetArgument<int>("userId");
 
-                    // Get user
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
                     var user = _userRepository.GetById(userId);
 
                     // Check if seriesid not already in watchlist
@@ -205,17 +193,18 @@ namespace Zappr.Api.GraphQL.Mutations
 
             Field<UserType>(
                 "removeSeriesFromWatchList",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }),
                 resolve: context =>
                 {
-                    var user = _userRepository.GetById(context.GetArgument<int>("userId"));
+                    // Get logged in user
+                    int userId = (context.UserContext as GraphQLUserContext).UserId;
+                    var user = _userRepository.GetById(userId);
+
+                    // get series
                     var series = user.WatchListedSeries.Single(fs => fs.SeriesId == context.GetArgument<int>("seriesId"));
 
+                    //remove series from watched
                     user.WatchListedSeries.Remove(series);
-
                     _userRepository.Update(user);
                     _userRepository.SaveChanges();
 
