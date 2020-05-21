@@ -1,7 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Authorization;
 using GraphQL.Types;
-using System;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
@@ -38,37 +37,38 @@ namespace Zappr.Api.GraphQL.Mutations
                 ),
                 resolve: context =>
                 {
+                    // Get arguments
                     string email = context.GetArgument<string>("email");
                     string pass = context.GetArgument<string>("password");
 
+                    // Find the corresponding user
                     var user = _userRepository.FindByEmail(email);
 
-                    if (user == null)
-                        throw new ExecutionError("User not found");
-
+                    // Throw errors
+                    if (user == null) throw new ExecutionError("User not found");
                     if (string.IsNullOrEmpty(user.Password) || !BCr.Verify(pass, user.Password))
                         throw new ExecutionError("Incorrect password");
 
+                    // If no errors, generate and give a token
                     return _tokenHelper.GenerateToken(1);
                 });
 
             Field<UserType>(
                 "register",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
-                ),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }),
                 resolve: context =>
                 {
+                    // Get the arguments
                     var userInput = context.GetArgument<User>("user");
-                    Console.WriteLine("input: " + userInput.Email);
 
+                    // If the email is already registered, don't bother
                     if (_userRepository.FindByEmail(userInput.Email) != null)
                         throw new ExecutionError("Already registered");
 
-                    Console.WriteLine("before construct");
+                    // Construct a user with the arguments
                     var user = ConstructUserFromRegister(userInput);
-                    Console.WriteLine("after construct");
 
+                    // Add and return the result
                     var added = _userRepository.Add(user);
                     _userRepository.SaveChanges();
                     return added;
@@ -92,10 +92,8 @@ namespace Zappr.Api.GraphQL.Mutations
                     // Check if episodeid not already in watched
                     if (user.WatchedEpisodes.Any(fs => fs.EpisodeId == episodeId)) return user;
 
-                    // Get Episode from db or API
+                    // Get Episode and its Series from db or API
                     var episode = await _episodeRepository.GetByIdAsync(episodeId);
-
-                    // Get its Series from db or API
                     episode.Series = await _seriesRepository.GetByIdAsync(episode.SeriesId);
 
                     // Add the episode to the users watched episodes and persist
@@ -104,7 +102,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            ).AuthorizeWith("UserPolicy"); ;
+            ).AuthorizeWith("UserPolicy"); //Only authenticated users can do this
 
             Field<UserType>(
                 "removeWatchedEpisode",
@@ -124,7 +122,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            ).AuthorizeWith("UserPolicy"); ;
+            ).AuthorizeWith("UserPolicy");  //Only authenticated users can do this
 
 
             FieldAsync<UserType>(
@@ -154,7 +152,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            ).AuthorizeWith("UserPolicy"); ;
+            ).AuthorizeWith("UserPolicy");  //Only authenticated users can do this
 
             Field<UserType>(
                 "removeFavoriteSeries",
@@ -174,7 +172,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy");  //Only authenticated users can do this
 
             FieldAsync<UserType>(
                 "addSeriesToWatchList",
@@ -203,7 +201,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            ).AuthorizeWith("UserPolicy"); ;
+            ).AuthorizeWith("UserPolicy");  //Only authenticated users can do this
 
             Field<UserType>(
                 "removeSeriesFromWatchList",
@@ -223,7 +221,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            ).AuthorizeWith("UserPolicy"); ;
+            ).AuthorizeWith("UserPolicy");  //Only authenticated users can do this
 
         }
 

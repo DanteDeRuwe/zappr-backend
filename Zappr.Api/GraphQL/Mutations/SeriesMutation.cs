@@ -20,7 +20,7 @@ namespace Zappr.Api.GraphQL.Mutations
             _seriesRepository = seriesRepository;
             Name = "SeriesMutation";
 
-            //Auth
+            // Entire mutation is for users only
             this.AuthorizeWith("UserPolicy");
 
             FieldAsync<SeriesType>(

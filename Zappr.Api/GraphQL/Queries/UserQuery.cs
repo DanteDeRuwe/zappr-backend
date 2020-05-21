@@ -15,11 +15,22 @@ namespace Zappr.Api.GraphQL
             Name = "UserQuery";
             _userRepository = (UserRepository)userRepository;
 
-            //Auth
+
+            // Default: only users can access these queries
             this.AuthorizeWith("UserPolicy");
 
+            // get user information
+            Field<UserType>(
+            "me",
+                resolve: context =>
+                {
+                    int id = (context.UserContext as GraphQLUserContext).UserId;
+                    return _userRepository.GetById(id);
+                }
+            );
+
             // get all
-            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll()).AuthorizeWith("AdminPolicy");
+            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll()).AuthorizeWith("AdminPolicy"); //Admin only
 
             // get by id
             QueryArguments args = new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" });
@@ -27,18 +38,7 @@ namespace Zappr.Api.GraphQL
                 "get",
                 arguments: args,
                 resolve: context => _userRepository.GetById(context.GetArgument<int>("id"))
-            ).AuthorizeWith("AdminPolicy");
-
-            // get by id
-            Field<UserType>(
-                "me",
-                arguments: args,
-                resolve: context =>
-                {
-                    int id = (context.UserContext as GraphQLUserContext).UserId;
-                    return _userRepository.GetById(id);
-                });
-
+            ).AuthorizeWith("AdminPolicy"); //Admin only
         }
 
     }
