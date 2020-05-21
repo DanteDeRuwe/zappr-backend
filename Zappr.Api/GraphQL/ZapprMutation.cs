@@ -1,5 +1,4 @@
-﻿using GraphQL.Authorization;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using Zappr.Api.GraphQL.Mutations;
 
 namespace Zappr.Api.GraphQL
@@ -9,8 +8,6 @@ namespace Zappr.Api.GraphQL
         public ZapprMutation()
         {
             Name = "Mutation";
-
-            this.AuthorizeWith("UserPolicy");
 
             Field<UserMutation>("userMutation", resolve: context => new { });
             Field<SeriesMutation>("seriesMutation", resolve: context => new { });

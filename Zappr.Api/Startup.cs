@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 using Zappr.Api.Data;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
@@ -18,6 +18,7 @@ using Zappr.Api.GraphQL;
 using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Helpers;
 using Zappr.Api.Services;
 
 namespace Zappr.Api
@@ -43,21 +44,6 @@ namespace Zappr.Api
                 });
             });
 
-
-            //JWT
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = "https://localhost:5001";
-                });
-
-            //GraphQLAuthorization
-            services.AddGraphQLAuth(_ =>
-            {
-                _.AddPolicy("UserPolicy", p => p.RequireClaim(ClaimTypes.Role, "User"));
-                _.AddPolicy("AdminPolicy", p => p.RequireClaim(ClaimTypes.Role, "Admin"));
-            });
-
             //DI
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
@@ -69,6 +55,7 @@ namespace Zappr.Api
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AppDbContext"))
             );
+
 
             // HTTPContext
             services.AddHttpContextAccessor();
@@ -104,8 +91,39 @@ namespace Zappr.Api
             services.AddScoped<SeriesMutation>();
             services.AddScoped<ZapprMutation>();
 
+
+            //JWT
+            services.AddSingleton<TokenHelper>();
+            //services.AddAuthentication().AddJwtBearer();
+
+            // ===== Add Jwt Authentication ========
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                });
+
+            services.AddAuthorization();
+
+
             // GraphQL
             services.AddGraphQL();
+
+            //GraphQLAuthorization
+            services.AddGraphQLAuth(_ =>
+            {
+                _.AddPolicy("UserPolicy", p => p.RequireClaim("role", "User"));
+                _.AddPolicy("AdminPolicy", p => p.RequireClaim("role", "Admin"));
+            });
 
         }
 
@@ -126,7 +144,7 @@ namespace Zappr.Api
 
             app.UseAuthentication();
 
-            app.UseMiddleware<MapRolesForGraphQLMiddleware>();
+            app.UseMiddleware<GraphQLMiddleware>();
             app.UseGraphQL<ISchema>("/graphql");
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions

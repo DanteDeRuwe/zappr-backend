@@ -3,6 +3,7 @@ using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Helpers;
 using Zappr.Api.Services;
 
 namespace Zappr.Api.GraphQL.Mutations
@@ -13,19 +14,36 @@ namespace Zappr.Api.GraphQL.Mutations
         private readonly TVMazeService _tvMaze;
         private readonly ISeriesRepository _seriesRepository;
         private readonly IEpisodeRepository _episodeRepository;
+        private readonly TokenHelper _tokenHelper;
 
         public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository,
-            IEpisodeRepository episodeRepository)
+            IEpisodeRepository episodeRepository, TokenHelper tokenHelper)
         {
             _userRepository = userRepository;
             _tvMaze = tvMaze;
             _seriesRepository = seriesRepository;
             _episodeRepository = episodeRepository;
+            _tokenHelper = tokenHelper;
 
             Name = "UserMutation";
 
-            //Auth
-            this.AuthorizeWith("UserPolicy");
+
+
+            Field<StringGraphType>(
+                "login",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "email" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "password" }
+                ),
+                resolve: context =>
+                {
+                    string email = context.GetArgument<string>("email");
+                    string pass = context.GetArgument<string>("password");
+                    //TODO validate
+                    return _tokenHelper.GenerateToken(1);
+                });
+
+
 
             Field<UserType>(
                 "createUser",
@@ -38,7 +56,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     var added = _userRepository.Add(user);
                     _userRepository.SaveChanges();
                     return added;
-                });
+                }).AuthorizeWith("UserPolicy");
 
             FieldAsync<UserType>(
                 "addWatchedEpisode",
@@ -70,7 +88,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeWatchedEpisode",
@@ -90,7 +108,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
 
             FieldAsync<UserType>(
@@ -120,7 +138,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeFavoriteSeries",
@@ -169,7 +187,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeSeriesFromWatchList",
@@ -189,7 +207,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
         }
     }
