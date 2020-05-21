@@ -1,8 +1,13 @@
-﻿using GraphQL.Types;
+﻿using GraphQL;
+using GraphQL.Authorization;
+using GraphQL.Types;
+using System;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Helpers;
 using Zappr.Api.Services;
+using BCr = BCrypt.Net.BCrypt;
 
 namespace Zappr.Api.GraphQL.Mutations
 {
@@ -12,29 +17,62 @@ namespace Zappr.Api.GraphQL.Mutations
         private readonly TVMazeService _tvMaze;
         private readonly ISeriesRepository _seriesRepository;
         private readonly IEpisodeRepository _episodeRepository;
+        private readonly TokenHelper _tokenHelper;
 
         public UserMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository,
-            IEpisodeRepository episodeRepository)
+            IEpisodeRepository episodeRepository, TokenHelper tokenHelper)
         {
             _userRepository = userRepository;
             _tvMaze = tvMaze;
             _seriesRepository = seriesRepository;
             _episodeRepository = episodeRepository;
+            _tokenHelper = tokenHelper;
 
             Name = "UserMutation";
 
+            Field<StringGraphType>(
+                "login",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "email" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "password" }
+                ),
+                resolve: context =>
+                {
+                    string email = context.GetArgument<string>("email");
+                    string pass = context.GetArgument<string>("password");
+
+                    var user = _userRepository.FindByEmail(email);
+
+                    if (user == null)
+                        throw new ExecutionError("User not found");
+
+                    if (string.IsNullOrEmpty(user.Password) || !BCr.Verify(pass, user.Password))
+                        throw new ExecutionError("Incorrect password");
+
+                    return _tokenHelper.GenerateToken(1);
+                });
+
             Field<UserType>(
-              "createUser",
-              arguments: new QueryArguments(
-                new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
-              ),
-              resolve: context =>
-              {
-                  var user = context.GetArgument<User>("user");
-                  var added = _userRepository.Add(user);
-                  _userRepository.SaveChanges();
-                  return added;
-              });
+                "register",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
+                ),
+                resolve: context =>
+                {
+                    var userInput = context.GetArgument<User>("user");
+                    Console.WriteLine("input: " + userInput.Email);
+
+                    if (_userRepository.FindByEmail(userInput.Email) != null)
+                        throw new ExecutionError("Already registered");
+
+                    Console.WriteLine("before construct");
+                    var user = ConstructUserFromRegister(userInput);
+                    Console.WriteLine("after construct");
+
+                    var added = _userRepository.Add(user);
+                    _userRepository.SaveChanges();
+                    return added;
+                });
 
             FieldAsync<UserType>(
                 "addWatchedEpisode",
@@ -66,7 +104,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeWatchedEpisode",
@@ -86,7 +124,7 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
 
             FieldAsync<UserType>(
@@ -116,7 +154,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeFavoriteSeries",
@@ -165,7 +203,7 @@ namespace Zappr.Api.GraphQL.Mutations
                     _userRepository.SaveChanges();
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
             Field<UserType>(
                 "removeSeriesFromWatchList",
@@ -185,8 +223,16 @@ namespace Zappr.Api.GraphQL.Mutations
 
                     return user;
                 }
-            );
+            ).AuthorizeWith("UserPolicy"); ;
 
         }
+
+        private User ConstructUserFromRegister(User userinput) => new User()
+        {
+            Email = userinput.Email,
+            FullName = userinput.FullName,
+            Role = "User",
+            Password = BCr.HashPassword(userinput.Password, 7)
+        };
     }
 }

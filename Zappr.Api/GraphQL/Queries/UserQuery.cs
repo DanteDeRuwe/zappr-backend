@@ -1,6 +1,8 @@
-﻿using GraphQL.Types;
+﻿using GraphQL.Authorization;
+using GraphQL.Types;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
+using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Types;
 
 namespace Zappr.Api.GraphQL
@@ -13,9 +15,11 @@ namespace Zappr.Api.GraphQL
             Name = "UserQuery";
             _userRepository = (UserRepository)userRepository;
 
+            //Auth
+            this.AuthorizeWith("UserPolicy");
 
             // get all
-            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll());
+            Field<ListGraphType<UserType>>("all", resolve: context => _userRepository.GetAll()).AuthorizeWith("AdminPolicy");
 
             // get by id
             QueryArguments args = new QueryArguments(new QueryArgument<IntGraphType> { Name = "id" });
@@ -23,7 +27,17 @@ namespace Zappr.Api.GraphQL
                 "get",
                 arguments: args,
                 resolve: context => _userRepository.GetById(context.GetArgument<int>("id"))
-            );
+            ).AuthorizeWith("AdminPolicy");
+
+            // get by id
+            Field<UserType>(
+                "me",
+                arguments: args,
+                resolve: context =>
+                {
+                    int id = (context.UserContext as GraphQLUserContext).UserId;
+                    return _userRepository.GetById(id);
+                });
 
         }
 

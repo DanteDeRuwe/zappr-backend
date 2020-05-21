@@ -2,6 +2,7 @@ using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -9,12 +10,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Zappr.Api.Data;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL;
+using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Api.Helpers;
 using Zappr.Api.Services;
 
 namespace Zappr.Api
@@ -52,6 +58,7 @@ namespace Zappr.Api
                 options.UseSqlServer(Configuration.GetConnectionString("AppDbContext"))
             );
 
+
             // HTTPContext
             services.AddHttpContextAccessor();
 
@@ -86,8 +93,44 @@ namespace Zappr.Api
             services.AddScoped<SeriesMutation>();
             services.AddScoped<ZapprMutation>();
 
+
+            //JWT
+            services.AddScoped<TokenHelper>();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("JWT")["secret"]))
+                    };
+                });
+
+            services.AddAuthorization();
+
+
             // GraphQL
-            services.AddGraphQL();
+            services.AddGraphQL().AddUserContextBuilder(context => new GraphQLUserContext { User = context.User });
+
+            //GraphQLAuthorization
+            services.AddGraphQLAuth(_ =>
+            {
+                _.AddPolicy("UserPolicy", p => p.RequireClaim("Role", new string[] { "User", "Admin" }));
+                _.AddPolicy("AdminPolicy", p => p.RequireClaim("Role", "Admin"));
+            });
 
         }
 
@@ -105,6 +148,8 @@ namespace Zappr.Api
             //context.Database.Migrate();
 
             app.UseCors("DefaultPolicy");
+
+            app.UseAuthentication();
 
             app.UseGraphQL<ISchema>("/graphql");
 
