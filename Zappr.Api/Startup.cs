@@ -10,7 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Zappr.Api.Data;
 using Zappr.Api.Data.Repositories;
 using Zappr.Api.Domain;
@@ -94,9 +96,6 @@ namespace Zappr.Api
 
             //JWT
             services.AddSingleton<TokenHelper>();
-            //services.AddAuthentication().AddJwtBearer();
-
-            // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>
@@ -110,19 +109,27 @@ namespace Zappr.Api
                 {
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("JWT")["secret"]))
+                    };
                 });
 
             services.AddAuthorization();
 
 
             // GraphQL
-            services.AddGraphQL();
+            services.AddGraphQL().AddUserContextBuilder(context => new GraphQLUserContext { User = context.User });
 
             //GraphQLAuthorization
             services.AddGraphQLAuth(_ =>
             {
-                _.AddPolicy("UserPolicy", p => p.RequireClaim("role", "User"));
-                _.AddPolicy("AdminPolicy", p => p.RequireClaim("role", "Admin"));
+                _.AddPolicy("UserPolicy", p => p.RequireClaim("Role", new string[] { "User", "Admin" }));
+                _.AddPolicy("AdminPolicy", p => p.RequireClaim("Role", "Admin"));
             });
 
         }
@@ -144,7 +151,6 @@ namespace Zappr.Api
 
             app.UseAuthentication();
 
-            app.UseMiddleware<GraphQLMiddleware>();
             app.UseGraphQL<ISchema>("/graphql");
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
