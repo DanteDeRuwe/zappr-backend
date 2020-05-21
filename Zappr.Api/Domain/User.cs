@@ -8,6 +8,8 @@ namespace Zappr.Api.Domain
         public int Id { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }
+        public string Role { get; set; }
+        public string Password { get; set; }
 
         // Nav Props
         public ISet<UserWatchListedSeries> WatchListedSeries { get; } = new HashSet<UserWatchListedSeries>();
@@ -18,11 +20,7 @@ namespace Zappr.Api.Domain
 
         // Constructor
         public User() { }
-        public User(int id, string fullName)
-        {
-            Id = id;
-            FullName = fullName;
-        }
+
 
         // Methods
         public void AddSeriesToWatchList(Series series) => WatchListedSeries.Add(new UserWatchListedSeries { Series = series, SeriesId = series.Id, User = this, UserId = Id });

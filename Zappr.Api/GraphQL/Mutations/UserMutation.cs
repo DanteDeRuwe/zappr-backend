@@ -1,10 +1,13 @@
-﻿using GraphQL.Authorization;
+﻿using GraphQL;
+using GraphQL.Authorization;
 using GraphQL.Types;
+using System;
 using System.Linq;
 using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Helpers;
 using Zappr.Api.Services;
+using BCr = BCrypt.Net.BCrypt;
 
 namespace Zappr.Api.GraphQL.Mutations
 {
@@ -27,8 +30,6 @@ namespace Zappr.Api.GraphQL.Mutations
 
             Name = "UserMutation";
 
-
-
             Field<StringGraphType>(
                 "login",
                 arguments: new QueryArguments(
@@ -39,24 +40,39 @@ namespace Zappr.Api.GraphQL.Mutations
                 {
                     string email = context.GetArgument<string>("email");
                     string pass = context.GetArgument<string>("password");
-                    //TODO validate
+
+                    var user = _userRepository.FindByEmail(email);
+
+                    if (user == null)
+                        throw new ExecutionError("User not found");
+
+                    if (string.IsNullOrEmpty(user.Password) || !BCr.Verify(pass, user.Password))
+                        throw new ExecutionError("Incorrect password");
+
                     return _tokenHelper.GenerateToken(1);
                 });
 
-
-
             Field<UserType>(
-                "createUser",
+                "register",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
                 ),
                 resolve: context =>
                 {
-                    var user = context.GetArgument<User>("user");
+                    var userInput = context.GetArgument<User>("user");
+                    Console.WriteLine("input: " + userInput.Email);
+
+                    if (_userRepository.FindByEmail(userInput.Email) != null)
+                        throw new ExecutionError("Already registered");
+
+                    Console.WriteLine("before construct");
+                    var user = ConstructUserFromRegister(userInput);
+                    Console.WriteLine("after construct");
+
                     var added = _userRepository.Add(user);
                     _userRepository.SaveChanges();
                     return added;
-                }).AuthorizeWith("UserPolicy");
+                });
 
             FieldAsync<UserType>(
                 "addWatchedEpisode",
@@ -210,5 +226,13 @@ namespace Zappr.Api.GraphQL.Mutations
             ).AuthorizeWith("UserPolicy"); ;
 
         }
+
+        private User ConstructUserFromRegister(User userinput) => new User()
+        {
+            Email = userinput.Email,
+            FullName = userinput.FullName,
+            Role = "User",
+            Password = BCr.HashPassword(userinput.Password, 7)
+        };
     }
 }

@@ -9,6 +9,7 @@ namespace Zappr.Api.GraphQL.Types
             Name = "UserInput";
             Field<NonNullGraphType<StringGraphType>>("fullName");
             Field<NonNullGraphType<StringGraphType>>("email");
+            Field<NonNullGraphType<StringGraphType>>("password");
         }
     }
 }

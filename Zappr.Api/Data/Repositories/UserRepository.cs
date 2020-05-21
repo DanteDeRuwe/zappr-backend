@@ -27,6 +27,7 @@ namespace Zappr.Api.Data.Repositories
 
         // When getting by id, include all series and episode data
         public User GetById(int id) => GetAll().SingleOrDefault(u => u.Id == id);
+        public User FindByEmail(string email) => GetAll().SingleOrDefault(u => u.Email == email);
 
         public User Add(User user)
         {

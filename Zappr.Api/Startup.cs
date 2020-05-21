@@ -95,7 +95,7 @@ namespace Zappr.Api
 
 
             //JWT
-            services.AddSingleton<TokenHelper>();
+            services.AddScoped<TokenHelper>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>

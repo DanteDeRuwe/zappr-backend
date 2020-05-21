@@ -4,6 +4,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Zappr.Api.Domain;
 
 namespace Zappr.Api.Helpers
 {
@@ -11,11 +12,13 @@ namespace Zappr.Api.Helpers
     {
         public IConfiguration Configuration { get; set; }
         private readonly string _secret;
+        private readonly IUserRepository _userRepository;
 
-        public TokenHelper(IConfiguration configuration)
+        public TokenHelper(IConfiguration configuration, IUserRepository userRepository)
         {
             Configuration = configuration;
             _secret = Configuration.GetSection("JWT")["secret"];
+            _userRepository = userRepository;
         }
 
 
@@ -24,13 +27,15 @@ namespace Zappr.Api.Helpers
             SymmetricSecurityKey mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secret));
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            var user = _userRepository.GetById(userId);
+
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                //TODO do this based on userId
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("Id", userId.ToString()),
-                    new Claim("Role", "User"),
+                    new Claim("Role", user.Role),
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
