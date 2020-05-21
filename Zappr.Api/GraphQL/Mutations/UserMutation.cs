@@ -146,7 +146,6 @@ namespace Zappr.Api.GraphQL.Mutations
             Field<UserType>(
                 "removeFavoriteSeries",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "userId" },
                     new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "seriesId" }
                 ),
                 resolve: context =>
