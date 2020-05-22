@@ -47,7 +47,7 @@ namespace Zappr.Api.GraphQL.Mutations
                         throw new ExecutionError("Incorrect password");
 
                     // If no errors, generate and give a token
-                    return _tokenHelper.GenerateToken(1);
+                    return _tokenHelper.GenerateToken(user.Id);
                 });
 
             Field<UserType>(
