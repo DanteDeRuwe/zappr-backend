@@ -3,7 +3,7 @@ using Zappr.Api.GraphQL.Types;
 using Zappr.Core.Interfaces;
 using Zappr.Infrastructure.Services;
 
-namespace Zappr.Api.GraphQL
+namespace Zappr.Api.GraphQL.Queries
 {
     public class SeriesQuery : ObjectGraphType
     {

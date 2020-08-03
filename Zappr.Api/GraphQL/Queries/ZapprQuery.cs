@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 
-namespace Zappr.Api.GraphQL
+namespace Zappr.Api.GraphQL.Queries
 {
     public class ZapprQuery : ObjectGraphType
     {

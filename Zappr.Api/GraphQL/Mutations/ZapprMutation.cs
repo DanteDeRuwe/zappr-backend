@@ -1,7 +1,6 @@
 ﻿using GraphQL.Types;
-using Zappr.Api.GraphQL.Mutations;
 
-namespace Zappr.Api.GraphQL
+namespace Zappr.Api.GraphQL.Mutations
 {
     public class ZapprMutation : ObjectGraphType
     {

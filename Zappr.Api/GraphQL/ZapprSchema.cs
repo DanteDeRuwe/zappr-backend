@@ -1,5 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using Zappr.Api.GraphQL.Mutations;
+using Zappr.Api.GraphQL.Queries;
 
 namespace Zappr.Api.GraphQL
 {

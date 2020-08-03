@@ -5,20 +5,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
-public static class GraphQLAuthExtensions
+namespace Zappr.Api.GraphQL.Helpers
 {
-
-    public static void AddGraphQLAuth(this IServiceCollection services, Action<AuthorizationSettings> configure)
+    public static class GraphQLAuthExtensions
     {
-        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.TryAddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
-        services.AddTransient<IValidationRule, AuthorizationValidationRule>();
 
-        services.TryAddTransient(s =>
+        public static void AddGraphQLAuth(this IServiceCollection services, Action<AuthorizationSettings> configure)
         {
-            AuthorizationSettings authSettings = new AuthorizationSettings();
-            configure(authSettings);
-            return authSettings;
-        });
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
+            services.AddTransient<IValidationRule, AuthorizationValidationRule>();
+
+            services.TryAddTransient(s =>
+            {
+                AuthorizationSettings authSettings = new AuthorizationSettings();
+                configure(authSettings);
+                return authSettings;
+            });
+        }
     }
 }

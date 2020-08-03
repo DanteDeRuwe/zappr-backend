@@ -5,7 +5,7 @@ using Zappr.Api.GraphQL.Types;
 using Zappr.Core.Interfaces;
 using Zappr.Infrastructure.Data.Repositories;
 
-namespace Zappr.Api.GraphQL
+namespace Zappr.Api.GraphQL.Queries
 {
     public class UserQuery : ObjectGraphType
     {

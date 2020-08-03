@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 
-namespace Zappr.Api.GraphQL.Types
+namespace Zappr.Api.GraphQL.Types.InputTypes
 {
     public class UserInputType : InputObjectGraphType
     {
