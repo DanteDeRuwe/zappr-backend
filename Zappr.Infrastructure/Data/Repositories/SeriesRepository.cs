@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zappr.Api.Data;
+using Zappr.Application.GraphQL.Interfaces;
 using Zappr.Core.Entities;
 using Zappr.Core.Interfaces;
-using Zappr.Infrastructure.Services;
 
 namespace Zappr.Infrastructure.Data.Repositories
 {
@@ -13,13 +12,13 @@ namespace Zappr.Infrastructure.Data.Repositories
     {
         private readonly AppDbContext _context;
         private readonly DbSet<Series> _series;
-        private readonly TVMazeService _tvMaze;
+        private readonly ISeriesService _seriesService;
 
-        public SeriesRepository(AppDbContext context, TVMazeService tvMaze)
+        public SeriesRepository(AppDbContext context, ISeriesService seriesService)
         {
             _context = context;
+            _seriesService = seriesService;
             _series = context.Series;
-            _tvMaze = tvMaze;
         }
 
         public List<Series> GetAll() => _series
@@ -31,7 +30,7 @@ namespace Zappr.Infrastructure.Data.Repositories
         public async Task<Series> GetByIdAsync(int id) => // Get series from db or API
             _series.Any(s => s.Id == id)
             ? GetAll().SingleOrDefault(s => s.Id == id)
-            : await _tvMaze.GetSeriesByIdAsync(id);
+            : await _seriesService.GetSeriesByIdAsync(id);
 
         public void Update(Series series) => _series.Update(series);
         public void SaveChanges() => _context.SaveChanges();

@@ -2,17 +2,17 @@
 using GraphQL.Types;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Core.Interfaces;
-using Zappr.Infrastructure.Data.Repositories;
 
 namespace Zappr.Api.GraphQL.Queries
 {
     public class UserQuery : ObjectGraphType
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
+
         public UserQuery(IUserRepository userRepository)
         {
             Name = "UserQuery";
-            _userRepository = (UserRepository)userRepository;
+            _userRepository = userRepository;
 
 
             // Default: only users can access these queries

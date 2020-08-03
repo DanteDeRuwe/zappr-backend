@@ -4,20 +4,17 @@ using System.Linq;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Core.Entities;
 using Zappr.Core.Interfaces;
-using Zappr.Infrastructure.Services;
 
 namespace Zappr.Api.GraphQL.Mutations
 {
     public class SeriesMutation : ObjectGraphType
     {
         private readonly IUserRepository _userRepository;
-        private readonly TVMazeService _tvMaze;
         private readonly ISeriesRepository _seriesRepository;
 
-        public SeriesMutation(IUserRepository userRepository, TVMazeService tvMaze, ISeriesRepository seriesRepository)
+        public SeriesMutation(IUserRepository userRepository, ISeriesRepository seriesRepository)
         {
             _userRepository = userRepository;
-            _tvMaze = tvMaze;
             _seriesRepository = seriesRepository;
             Name = "SeriesMutation";
 

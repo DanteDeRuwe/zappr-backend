@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
     <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="GraphQL.Authorization" Version="2.1.29" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
@@ -25,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zappr.Core\Zappr.Core.csproj" />
+    <ProjectReference Include="..\Zappr.Application\Zappr.Application.csproj" />
     <ProjectReference Include="..\Zappr.Infrastructure\Zappr.Infrastructure.csproj" />
   </ItemGroup>
 

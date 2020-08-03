@@ -1,19 +1,19 @@
 ﻿using GraphQL.Types;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Application.GraphQL.Interfaces;
 using Zappr.Core.Interfaces;
-using Zappr.Infrastructure.Services;
 
 namespace Zappr.Api.GraphQL.Queries
 {
     public class SeriesQuery : ObjectGraphType
     {
         private readonly ISeriesRepository _seriesRepository;
-        private readonly TVMazeService _tvmaze;
+        private readonly ISeriesService _service;
 
-        public SeriesQuery(ISeriesRepository seriesRepository, TVMazeService tvMaze)
+        public SeriesQuery(ISeriesRepository seriesRepository, ISeriesService service)
         {
             _seriesRepository = seriesRepository;
-            _tvmaze = tvMaze;
+            _service = service;
             Name = "SeriesQuery";
 
             // get by id
@@ -27,7 +27,7 @@ namespace Zappr.Api.GraphQL.Queries
             Field<ListGraphType<SeriesType>>(
                 "search",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
-                resolve: context => _tvmaze.SearchSeriesByNameAsync(context.GetArgument<string>("name"))
+                resolve: context => _service.SearchSeriesByNameAsync(context.GetArgument<string>("name"))
             );
 
             FieldAsync<SeriesType>(
@@ -35,7 +35,7 @@ namespace Zappr.Api.GraphQL.Queries
             arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "name" }),
             resolve: async context =>
             {
-                var res = await _tvmaze.SingleSearchSeriesByNameAsync(context.GetArgument<string>("name"));
+                var res = await _service.SingleSearchSeriesByNameAsync(context.GetArgument<string>("name"));
                 //Look up in db if possible for full results
                 return await _seriesRepository.GetByIdAsync(res.Id);
             });
@@ -45,7 +45,7 @@ namespace Zappr.Api.GraphQL.Queries
             Field<ListGraphType<SeriesType>>(
                 "today",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "country" }),
-                resolve: context => _tvmaze.GetScheduleAsync(context.GetArgument<string>("country"))
+                resolve: context => _service.GetScheduleAsync(context.GetArgument<string>("country"))
             );
 
             //Scheduled shows per country for the whole week (note, this only pulls from external API: less data)
@@ -58,7 +58,7 @@ namespace Zappr.Api.GraphQL.Queries
                     new QueryArgument<IntGraphType>
                     { Name = "numberofdays", Description = "the number of days you want to include in the schedule" }
                 ),
-                resolve: context => _tvmaze.GetScheduleMultipleDaysFromTodayAsync(
+                resolve: context => _service.GetScheduleMultipleDaysFromTodayAsync(
                     context.GetArgument<string>("country"),
                     context.GetArgument<int>("start"),
                     context.GetArgument<int>("numberofdays")

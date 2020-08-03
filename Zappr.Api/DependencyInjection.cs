@@ -1,6 +1,4 @@
 ﻿using GraphQL.Authorization;
-using GraphQL.Server;
-using GraphQL.Types;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -13,45 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Zappr.Api.GraphQL;
-using Zappr.Api.GraphQL.Mutations;
-using Zappr.Api.GraphQL.Queries;
-using Zappr.Api.GraphQL.Types;
-using Zappr.Api.GraphQL.Types.InputTypes;
-using Zappr.Api.Helpers;
 
 namespace Zappr.Api
 {
     public static class DependencyInjection
     {
-
-        public static void AddGraphQLWithDependencies(this IServiceCollection services)
-        {
-            services.AddTransient<ISchema, ZapprSchema>();
-
-            services.AddScoped<SeriesType>();
-            services.AddScoped<UserType>();
-            services.AddScoped<EpisodeType>();
-            services.AddScoped<CommentType>();
-            services.AddScoped<RatingType>();
-
-            services.AddScoped<UserInputType>();
-
-            services.AddScoped<UserQuery>();
-            services.AddScoped<SeriesQuery>();
-            services.AddScoped<ZapprQuery>();
-
-            services.AddScoped<UserMutation>();
-            services.AddScoped<SeriesMutation>();
-            services.AddScoped<ZapprMutation>();
-
-            services.AddGraphQL().AddUserContextBuilder(context => new GraphQLUserContext { User = context.User });
-        }
-
-
         public static void AddTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<TokenHelper>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
                 .AddAuthentication(options =>

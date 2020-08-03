@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using Zappr.Core.Interfaces;
 
-namespace Zappr.Api.Helpers
+namespace Zappr.Application.GraphQL.Helpers
 {
     public class TokenHelper
     {
@@ -24,13 +24,13 @@ namespace Zappr.Api.Helpers
 
         public string GenerateToken(int userId)
         {
-            SymmetricSecurityKey mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secret));
+            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secret));
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();
 
             var user = _userRepository.GetById(userId);
 
-            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {

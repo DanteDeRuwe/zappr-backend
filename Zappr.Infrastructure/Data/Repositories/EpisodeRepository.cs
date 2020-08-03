@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zappr.Api.Data;
+using Zappr.Application.GraphQL.Interfaces;
 using Zappr.Core.Entities;
 using Zappr.Core.Interfaces;
-using Zappr.Infrastructure.Services;
 
 namespace Zappr.Infrastructure.Data.Repositories
 {
@@ -13,13 +12,13 @@ namespace Zappr.Infrastructure.Data.Repositories
     {
         private readonly AppDbContext _context;
         private readonly DbSet<Episode> _episodes;
-        private readonly TVMazeService _tvMaze;
+        private readonly IEpisodeService _episodeService;
 
-        public EpisodeRepository(AppDbContext context, TVMazeService tvMaze)
+        public EpisodeRepository(AppDbContext context, IEpisodeService episodeService)
         {
             _context = context;
+            _episodeService = episodeService;
             _episodes = context.Episodes;
-            _tvMaze = tvMaze;
         }
 
         public List<Episode> GetAll() => _episodes
@@ -32,7 +31,7 @@ namespace Zappr.Infrastructure.Data.Repositories
         public async Task<Episode> GetByIdAsync(int id) => // Get episodes from db or API
             _episodes.Any(e => e.Id == id)
                 ? GetAll().SingleOrDefault(e => e.Id == id)
-                : await _tvMaze.GetEpisodeByIdAsync(id);
+                : await _episodeService.GetEpisodeByIdAsync(id);
 
         public void Update(Episode episode) => _episodes.Update(episode);
         public void SaveChanges() => _context.SaveChanges();

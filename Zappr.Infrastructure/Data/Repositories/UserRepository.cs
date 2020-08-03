@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Zappr.Api.Data;
 using Zappr.Core.Entities;
 using Zappr.Core.Interfaces;
 

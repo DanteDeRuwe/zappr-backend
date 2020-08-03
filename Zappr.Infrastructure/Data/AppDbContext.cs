@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Zappr.Core.Entities;
 
-namespace Zappr.Api.Data
+namespace Zappr.Infrastructure.Data
 
 {
     public class AppDbContext : DbContext

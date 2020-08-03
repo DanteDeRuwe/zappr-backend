@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Zappr.Api.Data;
+using Zappr.Application.GraphQL.Interfaces;
 using Zappr.Core.Interfaces;
+using Zappr.Infrastructure.Data;
 using Zappr.Infrastructure.Data.Repositories;
 using Zappr.Infrastructure.Services;
 
@@ -20,7 +21,8 @@ namespace Zappr.Infrastructure
             services.AddTransient<ISeriesRepository, SeriesRepository>();
             services.AddTransient<IEpisodeRepository, EpisodeRepository>();
 
-            services.AddSingleton<TVMazeService>();
+            services.AddSingleton<ISeriesService, TvMazeSeriesService>();
+            services.AddSingleton<IEpisodeService, TvMazeEpisodeService>();
         }
     }
 }

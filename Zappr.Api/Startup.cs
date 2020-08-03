@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Zappr.Application;
 using Zappr.Infrastructure;
 
 namespace Zappr.Api
@@ -25,18 +26,16 @@ namespace Zappr.Api
             services.AllowSynchronousIO();
 
             services.AddInfrastructure(Configuration);
+            services.AddApplication();
 
             services.AddTokenAuthentication(Configuration);
             services.AddAuthorization();
-
-            services.AddGraphQLWithDependencies();
 
             services.AddGraphQLAuth(_ =>
             {
                 _.AddPolicy("UserPolicy", p => p.RequireClaim("Role", new string[] { "User", "Admin" }));
                 _.AddPolicy("AdminPolicy", p => p.RequireClaim("Role", "Admin"));
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zappr.Core\Zappr.Core.csproj" />
+    <ProjectReference Include="..\Zappr.Application\Zappr.Application.csproj" />
   </ItemGroup>
 
 </Project>

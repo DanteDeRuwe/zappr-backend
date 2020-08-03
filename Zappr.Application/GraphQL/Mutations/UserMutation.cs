@@ -4,7 +4,7 @@ using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.GraphQL.Types.InputTypes;
-using Zappr.Api.Helpers;
+using Zappr.Application.GraphQL.Helpers;
 using Zappr.Core.Entities;
 using Zappr.Core.Interfaces;
 using BCr = BCrypt.Net.BCrypt;
