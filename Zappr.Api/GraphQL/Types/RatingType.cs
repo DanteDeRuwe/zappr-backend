@@ -1,5 +1,5 @@
 ﻿using GraphQL.Types;
-using Zappr.Api.Domain;
+using Zappr.Core.Domain;
 
 namespace Zappr.Api.GraphQL.Types
 {

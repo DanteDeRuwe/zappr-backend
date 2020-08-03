@@ -1,9 +1,9 @@
 ﻿using GraphQL.Authorization;
 using GraphQL.Types;
-using Zappr.Api.Data.Repositories;
-using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Types;
+using Zappr.Core.Domain;
+using Zappr.Infrastructure.Data.Repositories;
 
 namespace Zappr.Api.GraphQL
 {

@@ -1,9 +1,9 @@
 ﻿using GraphQL.Authorization;
 using GraphQL.Types;
 using System.Linq;
-using Zappr.Api.Domain;
 using Zappr.Api.GraphQL.Types;
-using Zappr.Api.Services;
+using Zappr.Core.Domain;
+using Zappr.Infrastructure.Services;
 
 namespace Zappr.Api.GraphQL.Mutations
 {

@@ -14,14 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Zappr.Api.Data;
-using Zappr.Api.Data.Repositories;
-using Zappr.Api.Domain;
 using Zappr.Api.GraphQL;
 using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Helpers;
-using Zappr.Api.Services;
+using Zappr.Core.Domain;
+using Zappr.Infrastructure.Data.Repositories;
+using Zappr.Infrastructure.Services;
 
 namespace Zappr.Api
 {
