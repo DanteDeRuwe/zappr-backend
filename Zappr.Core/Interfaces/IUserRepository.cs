@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Zappr.Core.Entities;
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Interfaces
 {
     public interface IUserRepository
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
 using System.Text.Json;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
 
 namespace Zappr.Infrastructure.Data.Configurations
 {

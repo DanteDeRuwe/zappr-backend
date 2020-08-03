@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Entities
 {
     public class Episode
     {

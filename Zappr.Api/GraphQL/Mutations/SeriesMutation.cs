@@ -2,7 +2,8 @@
 using GraphQL.Types;
 using System.Linq;
 using Zappr.Api.GraphQL.Types;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
+using Zappr.Core.Interfaces;
 using Zappr.Infrastructure.Services;
 
 namespace Zappr.Api.GraphQL.Mutations

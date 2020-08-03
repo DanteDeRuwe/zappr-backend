@@ -4,7 +4,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Zappr.Core.Domain;
+using Zappr.Core.Interfaces;
 
 namespace Zappr.Api.Helpers
 {

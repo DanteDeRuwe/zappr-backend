@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Entities
 {
     public class Comment
     {

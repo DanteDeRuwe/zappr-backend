@@ -1,5 +1,5 @@
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Entities
 {
     public abstract class UserSeries
     {

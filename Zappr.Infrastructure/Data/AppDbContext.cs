@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
 
 namespace Zappr.Api.Data
 

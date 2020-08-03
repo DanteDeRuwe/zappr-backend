@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Zappr.Api.Data;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
+using Zappr.Core.Interfaces;
 
 namespace Zappr.Infrastructure.Data.Repositories
 {

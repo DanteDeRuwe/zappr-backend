@@ -5,7 +5,8 @@ using System.Linq;
 using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Helpers;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
+using Zappr.Core.Interfaces;
 using BCr = BCrypt.Net.BCrypt;
 
 namespace Zappr.Api.GraphQL.Mutations

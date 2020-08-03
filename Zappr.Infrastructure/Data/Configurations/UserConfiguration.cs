@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
 
 namespace Zappr.Infrastructure.Data.Configurations
 {

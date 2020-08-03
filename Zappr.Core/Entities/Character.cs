@@ -1,4 +1,4 @@
-﻿namespace Zappr.Core.Domain
+﻿namespace Zappr.Core.Entities
 {
     public class Character
     {

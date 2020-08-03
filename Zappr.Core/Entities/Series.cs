@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Entities
 {
     public class Series
     {

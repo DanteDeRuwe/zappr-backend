@@ -19,7 +19,7 @@ using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Mutations;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.Helpers;
-using Zappr.Core.Domain;
+using Zappr.Core.Interfaces;
 using Zappr.Infrastructure.Data.Repositories;
 using Zappr.Infrastructure.Services;
 

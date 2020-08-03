@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Zappr.Api.Data;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
+using Zappr.Core.Interfaces;
 using Zappr.Infrastructure.Services;
 
 namespace Zappr.Infrastructure.Data.Repositories

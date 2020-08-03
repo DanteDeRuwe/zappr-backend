@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Zappr.Core.Entities;
 
-namespace Zappr.Core.Domain
+namespace Zappr.Core.Interfaces
 {
     public interface IEpisodeRepository
     {

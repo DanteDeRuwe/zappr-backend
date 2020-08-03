@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
 
 namespace Zappr.Infrastructure.Services
 {

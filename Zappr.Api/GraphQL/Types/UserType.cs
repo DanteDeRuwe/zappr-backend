@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 using System.Linq;
-using Zappr.Core.Domain;
+using Zappr.Core.Entities;
 
 namespace Zappr.Api.GraphQL.Types
 {
