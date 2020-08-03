@@ -29,5 +29,9 @@
     <ProjectReference Include="..\Zappr.Infrastructure\Zappr.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GraphQL\Helpers\" />
+  </ItemGroup>
+
 
 </Project>

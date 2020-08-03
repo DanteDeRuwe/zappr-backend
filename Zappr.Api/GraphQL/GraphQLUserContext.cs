@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace Zappr.Api.GraphQL.Helpers
+namespace Zappr.Api.GraphQL
 {
     public class GraphQLUserContext : IProvideClaimsPrincipal
     {

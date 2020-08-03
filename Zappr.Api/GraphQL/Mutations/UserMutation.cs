@@ -2,7 +2,6 @@
 using GraphQL.Authorization;
 using GraphQL.Types;
 using System.Linq;
-using Zappr.Api.GraphQL.Helpers;
 using Zappr.Api.GraphQL.Types;
 using Zappr.Api.GraphQL.Types.InputTypes;
 using Zappr.Api.Helpers;
