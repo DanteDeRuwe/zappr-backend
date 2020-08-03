@@ -17,7 +17,7 @@ namespace Zappr.Infrastructure.Data.Repositories
             _users = context.Users;
         }
 
-        public List<User> GetAll() => _users
+        public ICollection<User> GetAll() => _users
             .Include(u => u.FavoriteSeries).ThenInclude(us => us.Series)
             .Include(u => u.WatchListedSeries).ThenInclude(us => us.Series)
             .Include(u => u.RatedSeries).ThenInclude(us => us.Series).ThenInclude(s => s.Ratings)
@@ -36,9 +36,7 @@ namespace Zappr.Infrastructure.Data.Repositories
             return user;
         }
 
-        public User Delete(User user) => throw new System.NotImplementedException(); //TODO
         public void Update(User user) => _context.Update(user);
         public void SaveChanges() => _context.SaveChanges();
-        public void SaveChangesAsync() => _context.SaveChangesAsync();
     }
 }

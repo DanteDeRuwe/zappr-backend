@@ -21,7 +21,7 @@ namespace Zappr.Infrastructure.Data.Repositories
             _episodes = context.Episodes;
         }
 
-        public List<Episode> GetAll() => _episodes
+        public ICollection<Episode> GetAll() => _episodes
             .Include(e => e.Comments).ThenInclude(e => e.Author)
             .Include(e => e.Ratings).ThenInclude(e => e.Author)
             .ToList();
@@ -35,6 +35,5 @@ namespace Zappr.Infrastructure.Data.Repositories
 
         public void Update(Episode episode) => _episodes.Update(episode);
         public void SaveChanges() => _context.SaveChanges();
-        public void SaveChangesAsync() => _context.SaveChangesAsync();
     }
 }
