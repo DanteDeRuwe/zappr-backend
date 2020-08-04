@@ -18,9 +18,9 @@ namespace Zappr.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("AppDbContext"))
             );
 
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ISeriesRepository, SeriesRepository>();
-            services.AddTransient<IEpisodeRepository, EpisodeRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISeriesRepository, SeriesRepository>();
+            services.AddScoped<IEpisodeRepository, EpisodeRepository>();
 
             services.AddHttpClient<ISeriesService, TvMazeSeriesService>(client => client.BaseAddress = new Uri("https://api.tvmaze.com/"));
             services.AddHttpClient<IEpisodeService, TvMazeEpisodeService>(client => client.BaseAddress = new Uri("https://api.tvmaze.com/"));
