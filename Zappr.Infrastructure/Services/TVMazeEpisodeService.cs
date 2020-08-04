@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Zappr.Application.GraphQL.Interfaces;
@@ -15,8 +15,7 @@ namespace Zappr.Infrastructure.Services
         public async Task<Episode> GetEpisodeByIdAsync(int id)
         {
             string baseUrl = "http://api.tvmaze.com/episodes/" + id;
-            string url = BuildUrlWithQueries(baseUrl,
-                new Dictionary<string, string>() { { "embed", "show" } });
+            string url = QueryHelpers.AddQueryString(baseUrl, "embed", "show");
             var result = GetHttpResponse(url);
 
 
