@@ -1,16 +1,18 @@
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http;
-using System.Web;
 
 namespace Zappr.Infrastructure.Services
 {
     public abstract class ApiService
     {
         protected IConfiguration Configuration;
-        protected HttpClient Client = new HttpClient();
+        protected HttpClient Client;
 
-        protected ApiService(IConfiguration configuration) => Configuration = configuration;
+        protected ApiService(IConfiguration configuration, HttpClient client)
+        {
+            Configuration = configuration;
+            Client = client;
+        }
 
         protected HttpResponseMessage GetHttpResponse(string url)
         {

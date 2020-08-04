@@ -10,12 +10,11 @@ namespace Zappr.Infrastructure.Services
 {
     public class TvMazeEpisodeService : ApiService, IEpisodeService
     {
-        public TvMazeEpisodeService(IConfiguration configuration) : base(configuration) { }
+        public TvMazeEpisodeService(IConfiguration configuration, HttpClient client) : base(configuration, client) { }
 
         public async Task<Episode> GetEpisodeByIdAsync(int id)
         {
-            string baseUrl = "http://api.tvmaze.com/episodes/" + id;
-            string url = QueryHelpers.AddQueryString(baseUrl, "embed", "show");
+            string url = QueryHelpers.AddQueryString($"episodes/{id}", "embed", "show");
             var result = GetHttpResponse(url);
 
 

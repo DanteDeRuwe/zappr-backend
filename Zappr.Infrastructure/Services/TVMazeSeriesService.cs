@@ -14,14 +14,12 @@ namespace Zappr.Infrastructure.Services
 {
     public class TvMazeSeriesService : ApiService, ISeriesService
     {
-        public TvMazeSeriesService(IConfiguration configuration) : base(configuration) { }
+        public TvMazeSeriesService(IConfiguration configuration, HttpClient client) : base(configuration, client) { }
 
         public async Task<Series> GetSeriesByIdAsync(int id)
         {
-            string baseUrl = "http://api.tvmaze.com/shows/" + id;
-            string url = QueryHelpers.AddQueryString(baseUrl, "embed", "seasons");
+            string url = QueryHelpers.AddQueryString($"shows/{id}", "embed", "seasons");
             var result = GetHttpResponse(url);
-
 
             if (result.IsSuccessStatusCode)
             {
@@ -39,9 +37,11 @@ namespace Zappr.Infrastructure.Services
 
         public async Task<List<Series>> SearchSeriesByNameAsync(string name)
         {
-            string baseUrl = "http://api.tvmaze.com/search/shows";
-            string url = QueryHelpers.AddQueryString(baseUrl,
-                new Dictionary<string, string>() { { "q", name }, { "embed", "seasons" } });
+            string url = QueryHelpers.AddQueryString(
+                "search/shows",
+                new Dictionary<string, string>() { { "q", name }, { "embed", "seasons" } }
+            );
+
             var result = GetHttpResponse(url);
 
 
@@ -66,8 +66,7 @@ namespace Zappr.Infrastructure.Services
 
         public async Task<Series> SingleSearchSeriesByNameAsync(string name)
         {
-            string baseUrl = "http://api.tvmaze.com/singlesearch/shows";
-            string url = QueryHelpers.AddQueryString(baseUrl, "q", name);
+            string url = QueryHelpers.AddQueryString("singlesearch/shows", "q", name);
             var result = GetHttpResponse(url);
 
 
@@ -90,9 +89,11 @@ namespace Zappr.Infrastructure.Services
 
             date ??= DateTime.Now.ToString("yyyy-MM-dd");
 
-            string baseUrl = "http://api.tvmaze.com/schedule";
-            string url = QueryHelpers.AddQueryString(baseUrl,
-                new Dictionary<string, string>() { { "country", countrycode }, { "date", date } });
+            string url = QueryHelpers.AddQueryString(
+                "schedule",
+                new Dictionary<string, string>() { { "country", countrycode }, { "date", date } }
+            );
+
             var result = GetHttpResponse(url);
 
 
