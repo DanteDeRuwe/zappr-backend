@@ -8,14 +8,14 @@ using Zappr.Core.Entities;
 
 namespace Zappr.Infrastructure.Services
 {
-    public class TvMazeEpisodeService : APIService, IEpisodeService
+    public class TvMazeEpisodeService : ApiService, IEpisodeService
     {
-        public TvMazeEpisodeService(IConfiguration configuration) => _configuration = configuration;
+        public TvMazeEpisodeService(IConfiguration configuration) : base(configuration) { }
 
         public async Task<Episode> GetEpisodeByIdAsync(int id)
         {
             string baseUrl = "http://api.tvmaze.com/episodes/" + id;
-            string url = buildUrlWithQueries(baseUrl,
+            string url = BuildUrlWithQueries(baseUrl,
                 new Dictionary<string, string>() { { "embed", "show" } });
             var result = GetHttpResponse(url);
 

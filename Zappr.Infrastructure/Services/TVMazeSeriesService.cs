@@ -11,15 +11,14 @@ using Zappr.Core.Entities;
 
 namespace Zappr.Infrastructure.Services
 {
-    public class TvMazeSeriesService : APIService, ISeriesService
+    public class TvMazeSeriesService : ApiService, ISeriesService
     {
-        public TvMazeSeriesService(IConfiguration configuration) => _configuration = configuration;
-
+        public TvMazeSeriesService(IConfiguration configuration) : base(configuration) { }
 
         public async Task<Series> GetSeriesByIdAsync(int id)
         {
             string baseUrl = "http://api.tvmaze.com/shows/" + id;
-            string url = buildUrlWithQueries(baseUrl,
+            string url = BuildUrlWithQueries(baseUrl,
                 new Dictionary<string, string>() { { "embed", "seasons" } });
             var result = GetHttpResponse(url);
 
@@ -41,7 +40,7 @@ namespace Zappr.Infrastructure.Services
         public async Task<List<Series>> SearchSeriesByNameAsync(string name)
         {
             string baseUrl = "http://api.tvmaze.com/search/shows";
-            string url = buildUrlWithQueries(baseUrl,
+            string url = BuildUrlWithQueries(baseUrl,
                 new Dictionary<string, string>() { { "q", name }, { "embed", "seasons" } });
             var result = GetHttpResponse(url);
 
@@ -68,7 +67,7 @@ namespace Zappr.Infrastructure.Services
         public async Task<Series> SingleSearchSeriesByNameAsync(string name)
         {
             string baseUrl = "http://api.tvmaze.com/singlesearch/shows";
-            string url = buildUrlWithQueries(baseUrl,
+            string url = BuildUrlWithQueries(baseUrl,
                 new Dictionary<string, string>() { { "q", name } });
             var result = GetHttpResponse(url);
 
@@ -93,7 +92,7 @@ namespace Zappr.Infrastructure.Services
             date ??= DateTime.Now.ToString("yyyy-MM-dd");
 
             string baseUrl = "http://api.tvmaze.com/schedule";
-            string url = buildUrlWithQueries(baseUrl,
+            string url = BuildUrlWithQueries(baseUrl,
                 new Dictionary<string, string>() { { "country", countrycode }, { "date", date } });
             var result = GetHttpResponse(url);
 
