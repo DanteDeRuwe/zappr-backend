@@ -344,9 +344,11 @@ healthchecksdb
 
 ## Own additions
 
-# class diagrams
+*.db
+*.sqlite
 *.cd
 
 .editorconfig
 
 Zappr.Api/appsettings.json
+Zappr.Api/appsettings.Development.json
