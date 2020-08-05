@@ -15,8 +15,14 @@ namespace Zappr.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("AppDbContext"))
+                //options.UseSqlServer(configuration.GetConnectionString("MSSQLServer"))
+                options.UseSqlite(configuration.GetConnectionString("Sqlite"))
             );
+
+            var provider = services.BuildServiceProvider();
+            var context = provider.GetRequiredService<AppDbContext>();
+            context.Database.OpenConnection();
+            context.Database.EnsureCreated();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISeriesRepository, SeriesRepository>();
@@ -25,5 +31,6 @@ namespace Zappr.Infrastructure
             services.AddHttpClient<ISeriesService, TvMazeSeriesService>(client => client.BaseAddress = new Uri("https://api.tvmaze.com/"));
             services.AddHttpClient<IEpisodeService, TvMazeEpisodeService>(client => client.BaseAddress = new Uri("https://api.tvmaze.com/"));
         }
+
     }
 }
