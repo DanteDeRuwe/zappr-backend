@@ -1,4 +1,4 @@
-﻿using GraphQL.Authorization;
+using GraphQL.Authorization;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -51,19 +51,20 @@ namespace Zappr.Api
 
             services.TryAddTransient(s =>
             {
-                AuthorizationSettings authSettings = new AuthorizationSettings();
+                var authSettings = new AuthorizationSettings();
                 configure(authSettings);
                 return authSettings;
             });
         }
 
-        public static void AddCorsWithDefaultPolicy(this IServiceCollection services, string origin) => services.AddCors(options =>
+        public static void AddCorsWithDefaultPolicy(this IServiceCollection services, IConfiguration configuration) => services.AddCors(options =>
            {
                options.AddPolicy("DefaultPolicy", builder =>
                {
+                   string[] origins = configuration.GetSection("CORS:origins").Get<string[]>();
                    builder.AllowAnyHeader()
                        .WithMethods("GET", "POST")
-                       .WithOrigins(origin);
+                       .WithOrigins(origins);
                });
            });
 

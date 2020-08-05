@@ -21,7 +21,7 @@ namespace Zappr.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCorsWithDefaultPolicy(origin: "http://localhost:4200");
+            services.AddCorsWithDefaultPolicy(Configuration);
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AllowSynchronousIO();
 
