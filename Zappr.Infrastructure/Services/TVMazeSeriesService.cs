@@ -138,7 +138,7 @@ namespace Zappr.Infrastructure.Services
             Network = seriesObj.network?.ToObject<dynamic>()?.name,
             Ended = seriesObj.status == "Ended",
             Premiered = seriesObj.premiered,
-            ImageUrl = seriesObj.image?.ToObject<dynamic>()?.medium,
+            ImageUrl = seriesObj.image?.ToObject<dynamic>()?.medium.ToString().Replace("http://", "https://"),
             Genres = seriesObj.genres?.ToObject<List<string>>(),
             AirTime = seriesObj.schedule?.ToObject<dynamic>()?.time,
             OfficialSite = seriesObj.officialSite,
