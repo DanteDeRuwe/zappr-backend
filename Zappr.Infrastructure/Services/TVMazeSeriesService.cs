@@ -54,7 +54,7 @@ namespace Zappr.Infrastructure.Services
                 JArray seriesArr = resObj;
                 var list = seriesArr.ToObject<List<dynamic>>().ToList();
 
-                return list.Select(s => ConstructSeries(s.show) as Series).ToList();
+                return list.Select(s => ConstructSeries(s.show) as Series).ToHashSet().ToList();
 
             }
             else
@@ -106,7 +106,7 @@ namespace Zappr.Infrastructure.Services
                 JArray seriesArr = resObj;
                 var list = seriesArr.ToObject<List<dynamic>>().ToList();
 
-                return list.Select(s => ConstructSeries(s.show) as Series).ToList();
+                return list.Select(s => ConstructSeries(s.show) as Series).ToHashSet().ToList();
 
             }
             else
